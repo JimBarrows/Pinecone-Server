@@ -1,0 +1,52 @@
+{
+  "name" : "pinecone-server",
+  "version" : "1.1.0",
+  "description" : "The backend for pinceone",
+  "private" : true,
+  "scripts" : {
+	"server:start:dev" : "nodemon --exec ./node_modules/.bin/babel-node --presets es2015,stage-2 ./bin/www",
+	"start" : "nodemon --exec ./node_modules/.bin/babel-node --presets es2015,stage-2 ./bin/www",
+	"server:test:e2e" : "babel-node spec/run.js",
+	"server:test:unit:single-run" : "karma start karma.conf.js --single-run",
+	"server:update-webdriver" : "webdriver-manager update",
+	"server:docker:run:dev" : "docker run --detach --name pinecone-server -p 3000:3000 -v $(pwd):/usr/src/app --link pinecone-mongo:mongo --link pinecone-rabbitmq:rabbitmq pinecone/server",
+	"server:docker:build:dev" : "docker build . -t pinecone/server"
+  },
+  "dependencies" : {
+	"amqplib" : "^0.4.2",
+	"babel-cli" : "^6.10.1",
+	"babel-core" : "^6.10.4",
+	"babel-preset-es2015" : "^6.9.0",
+	"babel-preset-stage-2" : "^6.11.0",
+	"bluebird" : "^3.4.1",
+	"body-parser" : "~1.15.1",
+	"cookie-parser" : "~1.4.3",
+	"debug" : "~2.2.0",
+	"express" : "~4.13.4",
+	"express-session" : "^1.13.0",
+	"jade" : "~1.11.0",
+	"less-middleware" : "1.0.x",
+	"moment" : "^2.14.1",
+	"mongoose" : "^4.5.3",
+	"morgan" : "~1.7.0",
+	"passport" : "^0.3.2",
+	"passport-facebook" : "^2.1.1",
+	"passport-local" : "^1.0.0",
+	"passport-local-mongoose" : "^4.0.0",
+	"rabbit.js" : "^0.4.4",
+	"serve-favicon" : "~2.3.0"
+  },
+  "devDependencies" : {
+	"axios" : "^0.12.0",
+	"chai" : "^3.5.0",
+	"jasmine" : "^2.4.1",
+	"jasmine-core" : "^2.4.1",
+	"karma" : "^1.1.0",
+	"karma-chrome-launcher" : "^1.0.1",
+	"karma-firefox-launcher" : "^1.0.0",
+	"karma-jasmine" : "^1.0.2",
+	"karma-junit-reporter" : "^1.1.0",
+	"mocha" : "^2.5.3",
+	"webdriverio" : "^4.1.1"
+  }
+}
