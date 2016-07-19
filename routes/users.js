@@ -9,13 +9,11 @@ router.get('/', function (req, res) {
 });
 
 router.post('/register', function (req, res) {
-	console.log("register post ", req.body);
 	Account.register(new Account({username: req.body.username}), req.body.password, function (err, account) {
 		if (err) {
-			console.log("Could not create account when registering because ", err);
+			console.log("While registering, could not registeruser because ", err);
 			return res.json({error: err.message});
 		}
-		console.log("Registered: ", account);
 		passport.authenticate('local')(req, res, function () {
 			req.session.save(function (err) {
 				if (err) {
