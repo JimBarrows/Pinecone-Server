@@ -197,7 +197,49 @@ describe("Channel services", function () {
 						done();
 					})
 					.catch((error) => console.log("error getting list: ", error));
-		}, 10000)
+		}, 10000);
+
+		it("can list channels, and their facebook destinations for the loggged in user", function (done) {
+			const now = moment();
+			Channel.find({owner: this.newUser.id}).exec()
+					.then((channelList) => {
+						var savePromises = [];
+						channelList.forEach((channel) => {
+							channel.facebookDestinations = [{
+								accessToken: "access token",
+								expiresIn: now,
+								signedRequest: "signed request",
+								userId: "user id"
+							}];
+							savePromises.push(channel.save());
+						});
+						return Promise.all(savePromises);
+					})
+					.then(() => {
+						return this.axios.get(this.newUser.id + '/channels');
+					})
+					.then((response) => {
+						let channelList = response.data;
+						expect(channelList.length).toBe(this.channels.length);
+						this.channels.sort(nameOrder);
+						channelList.sort(nameOrder);
+						channelList.forEach((channel, index) => {
+							expect(channel._id).toBe(this.channels[index]._id.toString());
+							expect(channel.name).toBe(this.channels[index].name);
+							expect(channel.owner).toBe(this.channels[index].owner.toString());
+							expect(channel.facebookDestinations.length).toBe(1);
+							channel.facebookDestinations.forEach((destination)=> {
+								expect(destination.accessToken).toBe("access token");
+								expect(destination.expiresIn).toBe(now.toISOString());
+								expect(destination.signedRequest).toBe("signed request");
+								expect(destination.userId).toBe("user id");
+							})
+
+						});
+						done();
+					})
+					.catch((error) => console.log("error getting list: ", error));
+		}, 10000);
 	});
 
 	describe("put operation", function () {
