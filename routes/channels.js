@@ -6,14 +6,14 @@ import Channel from "pinecone-models/src/Channel";
 
 /* GET home page. */
 router.post('/', isAuthenticated, function (req, res) {
-	console.log("post channel: ", req.body);
-	let {name, wordPressDestinations, facebookDestinations} = req.body;
+	let {name, wordPressDestinations, facebookDestinations, twitterDestinations} = req.body;
 	let owner = req.user.id;
 	Channel.create({
 				name,
 				owner,
 				wordPressDestinations,
-				facebookDestinations
+				facebookDestinations,
+				twitterDestinations
 			})
 			.then((newChannel) => {
 				res.status(201).json(newChannel).end()

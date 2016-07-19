@@ -62,6 +62,14 @@ describe("Channel services", function () {
 			}]
 		};
 
+		let channelWithTwitterDestination = {
+			name: "new channel",
+			twitterDestinations: [{
+				access_token_key: "access_token_key",
+				access_token_secret: "access_token_secret"
+			}]
+		};
+
 		it("can create a channel", function (done) {
 			this.axios.post(this.newUser.id + '/channels', channel)
 					.then((response) => {
@@ -109,7 +117,22 @@ describe("Channel services", function () {
 					})
 					.catch((error) => console.log(error));
 		});
-	}, 10000);
+		it("can create a channel with a twitter destination", function (done) {
+			this.axios.post(this.newUser.id + '/channels', channelWithTwitterDestination)
+					.then((response) => {
+						let {_id, name, owner, twitterDestinations} = response.data;
+						expect(name).toBe(channelWithTwitterDestination.name);
+						expect(owner).toBe(this.newUser.id);
+						expect(_id).toBeDefined();
+						expect(twitterDestinations).toBeDefined();
+						expect(twitterDestinations.length).toBe(1);
+						expect(twitterDestinations[0].access_token_key).toBe(channelWithTwitterDestination.twitterDestinations[0].access_token_key);
+						expect(twitterDestinations[0].access_token_secret).toBe(channelWithTwitterDestination.twitterDestinations[0].access_token_secret);
+						done();
+					})
+					.catch((error) => console.log(error));
+		});
+	},10000);
 
 	describe("get", function () {
 
