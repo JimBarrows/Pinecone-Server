@@ -34,13 +34,14 @@ router.get('/', isAuthenticated, function (req, res) {
 });
 
 router.put('/:channelId', isAuthenticated, function (req, res) {
-	let {name, wordPressDestinations, facebookDestinations} = req.body;
+	let {name, wordPressDestinations, facebookDestinations, twitterDestinations} = req.body;
 	let {channelId} = req.params;
 
 	Channel.findOneAndUpdate({_id: channelId}, {
 				name,
 				wordPressDestinations,
-				facebookDestinations
+				facebookDestinations,
+				twitterDestinations
 			})
 			.exec()
 			.then((updatedChannel) => res.status(200).end())
