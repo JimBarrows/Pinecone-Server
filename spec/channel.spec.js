@@ -102,7 +102,7 @@ describe("Channel services", function () {
 						expect(facebookDestinations).toBeDefined();
 						expect(facebookDestinations.length).toBe(1);
 						expect(facebookDestinations[0].accessToken).toBe(channelWithFacebookDestination.facebookDestinations[0].accessToken);
-						expect(facebookDestinations[0].expiresIn).toBe(channelWithFacebookDestination.facebookDestinations[0].expiresIn);
+						expect(facebookDestinations[0].expiresIn).toBe(channelWithFacebookDestination.facebookDestinations[0].expiresIn.toISOString());
 						expect(facebookDestinations[0].signedRequest).toBe(channelWithFacebookDestination.facebookDestinations[0].signedRequest);
 						expect(facebookDestinations[0].userId).toBe(channelWithFacebookDestination.facebookDestinations[0].userId);
 						done();
