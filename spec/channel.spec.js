@@ -263,6 +263,42 @@ describe("Channel services", function () {
 					})
 					.catch((error) => console.log("error getting list: ", error));
 		}, 10000);
+		it("can list channels, and their twitter destinations for the loggged in user", function (done) {
+			const now = moment();
+			Channel.find({owner: this.newUser.id}).exec()
+					.then((channelList) => {
+						var savePromises = [];
+						channelList.forEach((channel) => {
+							channel.twitterDestinations = [{
+									access_token_key: "access_token_key",
+									access_token_secret: "access_token_secret"
+							}];
+							savePromises.push(channel.save());
+						});
+						return Promise.all(savePromises);
+					})
+					.then(() => {
+						return this.axios.get(this.newUser.id + '/channels');
+					})
+					.then((response) => {
+						let channelList = response.data;
+						expect(channelList.length).toBe(this.channels.length);
+						this.channels.sort(nameOrder);
+						channelList.sort(nameOrder);
+						channelList.forEach((channel, index) => {
+							expect(channel._id).toBe(this.channels[index]._id.toString());
+							expect(channel.name).toBe(this.channels[index].name);
+							expect(channel.owner).toBe(this.channels[index].owner.toString());
+							expect(channel.twitterDestinations.length).toBe(1);
+							channel.twitterDestinations.forEach((destination)=> {
+								expect(destination.access_token_key).toBe("access_token_key");
+								expect(destination.access_token_secret).toBe("access_token_secret");
+							});
+						});
+						done();
+					})
+					.catch((error) => console.log("error getting list: ", error));
+		}, 10000);
 	});
 
 	describe("put operation", function () {
