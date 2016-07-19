@@ -311,6 +311,48 @@ describe("Channel services", function () {
 					.catch((error) => console.log("Couldn't update the channel: ", error));
 		});
 
+		it("should update a channel with facebook destinations", function (done) {
+			const now = moment();
+			Channel.find({owner: this.newUser.id}).exec()
+					.then((channelList) => {
+						var savePromises = [];
+						channelList.forEach((channel) => {
+							channel.facebookDestinations = [{
+								accessToken: "access token",
+								expiresIn: now,
+								signedRequest: "signed request",
+								userId: "user id"
+							}];
+							savePromises.push(channel.save());
+						});
+						return Promise.all(savePromises);
+					})
+					.then(() => this.axios.put(this.newUser.id + '/channels/' + this.originalChannel._id, {
+						_id: this.originalChannel._id,
+						name: "Updated Name",
+						facebookDestinations: [{
+							accessToken: "access token",
+							expiresIn: now,
+							signedRequest: "signed request",
+							userId: "user id"
+						}]
+					}))
+					.then(()=> Channel.findOne({_id: this.originalChannel._id}))
+					.then((updatedChannel) => {
+						expect(updatedChannel._id.toString()).toBe(this.originalChannel._id.toString());
+						expect(updatedChannel.name).toBe("Updated Name");
+						expect(updatedChannel.facebookDestinations.length).toBe(1);
+						updatedChannel.facebookDestinations.forEach((destination)=> {
+							expect(destination.accessToken).toBe("access token");
+							expect(moment(destination.expiresIn).toISOString()).toBe(now.toISOString());
+							expect(destination.signedRequest).toBe("signed request");
+							expect(destination.userId).toBe("user id");
+						});
+						done();
+					})
+					.catch((error) => console.log("Couldn't update the channel: ", error));
+		});
+
 		it("should update a word press destination of a channel", function (done) {
 			Channel.find({owner: this.newUser.id}).exec()
 					.then((channelList) => {
