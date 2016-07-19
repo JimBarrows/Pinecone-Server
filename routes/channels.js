@@ -1,17 +1,19 @@
 const express         = require('express'),
       router          = express.Router(),
       isAuthenticated = require('../authentication');
-import Channel from "../models/Channel";
+import Channel from "pinecone-models/src/Channel";
 
 
 /* GET home page. */
 router.post('/', isAuthenticated, function (req, res) {
-	let {name, wordPressDestinations} = req.body;
+	console.log("post channel: ", req.body);
+	let {name, wordPressDestinations, facebookDestinations} = req.body;
 	let owner = req.user.id;
 	Channel.create({
 				name,
 				owner,
-				wordPressDestinations
+				wordPressDestinations,
+				facebookDestinations
 			})
 			.then((newChannel) => {
 				res.status(201).json(newChannel).end()
@@ -32,12 +34,13 @@ router.get('/', isAuthenticated, function (req, res) {
 });
 
 router.put('/:channelId', isAuthenticated, function (req, res) {
-	let {name, wordPressDestinations} = req.body;
+	let {name, wordPressDestinations, facebookDestinations} = req.body;
 	let {channelId} = req.params;
 
 	Channel.findOneAndUpdate({_id: channelId}, {
 				name,
-				wordPressDestinations
+				wordPressDestinations,
+				facebookDestinations
 			})
 			.exec()
 			.then((updatedChannel) => res.status(200).end())

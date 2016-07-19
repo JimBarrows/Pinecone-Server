@@ -4,9 +4,9 @@
 'use strict';
 'use strict';
 const mongoose = require('mongoose')
-		, Account  = require("../models/account.js")
-		, Channel  = require("../models/channel.js")
-		, Content  = require("../models/content.js")
+		, Account  = require("pinecone-models/src/Account")
+		, Channel  = require("pinecone-models/src/Channel")
+		, Content  = require("pinecone-models/src/Content.js")
 		, axios    = require("axios")
 		, Promise  = require("bluebird");
 

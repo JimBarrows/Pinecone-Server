@@ -4,11 +4,10 @@
 'use strict';
 import promise from "bluebird";
 import moment from "moment";
-import mongooseConfig from "../mongoose.config.js";
-import Content from "../models/Content";
-import Channel from "../models/Channel";
-import Account from "../models/account";
-mongooseConfig;
+import Account from 'pinecone-models/src/Account';
+import Channel from 'pinecone-models/src/Channel';
+import Content from 'pinecone-models/src/Content';
+
 Account.remove({})
 		.then(() => Content.remove({}))
 		.then(() => Channel.remove({}))
