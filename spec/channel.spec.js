@@ -62,6 +62,14 @@ describe("Channel services", function () {
 			}]
 		};
 
+		let channelWithTwitterDestination = {
+			name: "new channel",
+			twitterDestinations: [{
+				access_token_key: "access_token_key",
+				access_token_secret: "access_token_secret"
+			}]
+		};
+
 		it("can create a channel", function (done) {
 			this.axios.post(this.newUser.id + '/channels', channel)
 					.then((response) => {
@@ -109,7 +117,22 @@ describe("Channel services", function () {
 					})
 					.catch((error) => console.log(error));
 		});
-	}, 10000);
+		it("can create a channel with a twitter destination", function (done) {
+			this.axios.post(this.newUser.id + '/channels', channelWithTwitterDestination)
+					.then((response) => {
+						let {_id, name, owner, twitterDestinations} = response.data;
+						expect(name).toBe(channelWithTwitterDestination.name);
+						expect(owner).toBe(this.newUser.id);
+						expect(_id).toBeDefined();
+						expect(twitterDestinations).toBeDefined();
+						expect(twitterDestinations.length).toBe(1);
+						expect(twitterDestinations[0].access_token_key).toBe(channelWithTwitterDestination.twitterDestinations[0].access_token_key);
+						expect(twitterDestinations[0].access_token_secret).toBe(channelWithTwitterDestination.twitterDestinations[0].access_token_secret);
+						done();
+					})
+					.catch((error) => console.log(error));
+		});
+	},10000);
 
 	describe("get", function () {
 
@@ -240,6 +263,42 @@ describe("Channel services", function () {
 					})
 					.catch((error) => console.log("error getting list: ", error));
 		}, 10000);
+		it("can list channels, and their twitter destinations for the loggged in user", function (done) {
+			const now = moment();
+			Channel.find({owner: this.newUser.id}).exec()
+					.then((channelList) => {
+						var savePromises = [];
+						channelList.forEach((channel) => {
+							channel.twitterDestinations = [{
+									access_token_key: "access_token_key",
+									access_token_secret: "access_token_secret"
+							}];
+							savePromises.push(channel.save());
+						});
+						return Promise.all(savePromises);
+					})
+					.then(() => {
+						return this.axios.get(this.newUser.id + '/channels');
+					})
+					.then((response) => {
+						let channelList = response.data;
+						expect(channelList.length).toBe(this.channels.length);
+						this.channels.sort(nameOrder);
+						channelList.sort(nameOrder);
+						channelList.forEach((channel, index) => {
+							expect(channel._id).toBe(this.channels[index]._id.toString());
+							expect(channel.name).toBe(this.channels[index].name);
+							expect(channel.owner).toBe(this.channels[index].owner.toString());
+							expect(channel.twitterDestinations.length).toBe(1);
+							channel.twitterDestinations.forEach((destination)=> {
+								expect(destination.access_token_key).toBe("access_token_key");
+								expect(destination.access_token_secret).toBe("access_token_secret");
+							});
+						});
+						done();
+					})
+					.catch((error) => console.log("error getting list: ", error));
+		}, 10000);
 	});
 
 	describe("put operation", function () {
@@ -347,6 +406,44 @@ describe("Channel services", function () {
 							expect(moment(destination.expiresIn).toISOString()).toBe(now.toISOString());
 							expect(destination.signedRequest).toBe("signed request");
 							expect(destination.userId).toBe("user id");
+						});
+						done();
+					})
+					.catch((error) => console.log("Couldn't update the channel: ", error));
+		});
+
+		it("should update a channel with twitter destinations", function (done) {
+			const now = moment();
+			Channel.find({owner: this.newUser.id}).exec()
+					.then((channelList) => {
+						var savePromises = [];
+						channelList.forEach((channel) => {
+							channel.twitterDestinations = [{
+								access_token_key: "access_token_key",
+								access_token_secret: "access_token_secret"
+							}];
+							savePromises.push(channel.save());
+						});
+						return Promise.all(savePromises);
+					})
+					.then(() => this.axios.put(this.newUser.id + '/channels/' + this.originalChannel._id, {
+						_id: this.originalChannel._id,
+						name: "Updated Name",
+						twitterDestinations: [{
+							accessToken: "access token",
+							expiresIn: now,
+							signedRequest: "signed request",
+							userId: "user id"
+						}]
+					}))
+					.then(()=> Channel.findOne({_id: this.originalChannel._id}))
+					.then((updatedChannel) => {
+						expect(updatedChannel._id.toString()).toBe(this.originalChannel._id.toString());
+						expect(updatedChannel.name).toBe("Updated Name");
+						expect(updatedChannel.twitterDestinations.length).toBe(1);
+						updatedChannel.twitterDestinations.forEach((destination)=> {
+							expect(destination.access_token_key).toBe("access_token_key");
+							expect(destination.access_token_secret).toBe("access_token_secret");
 						});
 						done();
 					})
