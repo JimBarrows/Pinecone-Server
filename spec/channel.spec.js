@@ -3,10 +3,11 @@
  */
 'use strict';
 const mongoose = require('mongoose')
-		, Account  = require("../models/account.js")
-		, Channel  = require("../models/channel.js")
+		, Account  = require("pinecone-models/src/Account")
+		, Channel  = require("pinecone-models/src/Channel")
 		, axios    = require("axios")
-		, Promise  = require("bluebird");
+		, Promise  = require("bluebird")
+		, moment   = require("moment");
 
 describe("Channel services", function () {
 
@@ -18,7 +19,7 @@ describe("Channel services", function () {
 	beforeEach(function (done) {
 		this.axios = axios.create({
 			baseURL: 'http://localhost:3000/api',
-			timeout: 1000
+			timeout: 10000
 		});
 		Account.remove({})
 				.then(() => Channel.remove({}))
@@ -41,13 +42,23 @@ describe("Channel services", function () {
 			name: "new channel"
 		};
 
-		let channelWithDestination = {
+		let channelWithWordpressDestination = {
 			name: "new channel",
 			wordPressDestinations: [{
 				name: "new word press destination",
 				username: "username",
 				password: "password",
 				url: "http://foo.com/xmlrpc.php"
+			}]
+		};
+
+		let channelWithFacebookDestination = {
+			name: "new channel",
+			facebookDestinations: [{
+				accessToken: "access token",
+				expiresIn: moment(),
+				signedRequest: "signed request",
+				userId: "user id"
 			}]
 		};
 
@@ -63,24 +74,42 @@ describe("Channel services", function () {
 					.catch((error) => console.log(error));
 		});
 
-		it("can create a channel with a single destination", function (done) {
-			this.axios.post(this.newUser.id + '/channels', channelWithDestination)
+		it("can create a channel with a word press destination", function (done) {
+			this.axios.post(this.newUser.id + '/channels', channelWithWordpressDestination)
 					.then((response) => {
 						let {_id, name, owner, wordPressDestinations} = response.data;
-						expect(name).toBe(channelWithDestination.name);
+						expect(name).toBe(channelWithWordpressDestination.name);
 						expect(owner).toBe(this.newUser.id);
 						expect(_id).toBeDefined();
 						expect(wordPressDestinations).toBeDefined();
 						expect(wordPressDestinations.length).toBe(1);
-						expect(wordPressDestinations[0].name).toBe(channelWithDestination.wordPressDestinations[0].name);
-						expect(wordPressDestinations[0].username).toBe(channelWithDestination.wordPressDestinations[0].username);
-						expect(wordPressDestinations[0].password).toBe(channelWithDestination.wordPressDestinations[0].password);
-						expect(wordPressDestinations[0].url).toBe(channelWithDestination.wordPressDestinations[0].url);
+						expect(wordPressDestinations[0].name).toBe(channelWithWordpressDestination.wordPressDestinations[0].name);
+						expect(wordPressDestinations[0].username).toBe(channelWithWordpressDestination.wordPressDestinations[0].username);
+						expect(wordPressDestinations[0].password).toBe(channelWithWordpressDestination.wordPressDestinations[0].password);
+						expect(wordPressDestinations[0].url).toBe(channelWithWordpressDestination.wordPressDestinations[0].url);
 						done();
 					})
 					.catch((error) => console.log(error));
 		});
-	});
+
+		it("can create a channel with a facebook destination", function (done) {
+			this.axios.post(this.newUser.id + '/channels', channelWithFacebookDestination)
+					.then((response) => {
+						let {_id, name, owner, facebookDestinations} = response.data;
+						expect(name).toBe(channelWithFacebookDestination.name);
+						expect(owner).toBe(this.newUser.id);
+						expect(_id).toBeDefined();
+						expect(facebookDestinations).toBeDefined();
+						expect(facebookDestinations.length).toBe(1);
+						expect(facebookDestinations[0].accessToken).toBe(channelWithFacebookDestination.facebookDestinations[0].accessToken);
+						expect(facebookDestinations[0].expiresIn).toBe(channelWithFacebookDestination.facebookDestinations[0].expiresIn);
+						expect(facebookDestinations[0].signedRequest).toBe(channelWithFacebookDestination.facebookDestinations[0].signedRequest);
+						expect(facebookDestinations[0].userId).toBe(channelWithFacebookDestination.facebookDestinations[0].userId);
+						done();
+					})
+					.catch((error) => console.log(error));
+		});
+	}, 10000);
 
 	describe("get", function () {
 

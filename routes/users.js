@@ -1,6 +1,6 @@
 var express  = require('express');
 var passport = require('passport');
-var Account  = require('../models/account');
+var Account  = require('pinecone-models/src/Account');
 var router   = express.Router();
 
 /* GET users listing. */
@@ -9,14 +9,17 @@ router.get('/', function (req, res) {
 });
 
 router.post('/register', function (req, res) {
+	console.log("register post ", req.body);
 	Account.register(new Account({username: req.body.username}), req.body.password, function (err, account) {
 		if (err) {
+			console.log("Could not create account when registering because ", err);
 			return res.json({error: err.message});
 		}
-
+		console.log("Registered: ", account);
 		passport.authenticate('local')(req, res, function () {
 			req.session.save(function (err) {
 				if (err) {
+					console.log("While registering, could not manually authenticate user because ", err);
 					return next(err);
 				}
 				res.json({id: account._id, username: account.username});

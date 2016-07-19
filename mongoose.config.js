@@ -2,6 +2,6 @@ import mongoose from "mongoose";
 
 mongoose.Promise = require('bluebird');
 
-mongoose.connect('mongodb://mongo/pinecone');
+let db = mongoose.createConnection('mongodb://mongo/pinecone');
 
-module.exports = mongoose;
+module.exports = db;
