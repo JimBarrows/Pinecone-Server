@@ -412,6 +412,44 @@ describe("Channel services", function () {
 					.catch((error) => console.log("Couldn't update the channel: ", error));
 		});
 
+		it("should update a channel with twitter destinations", function (done) {
+			const now = moment();
+			Channel.find({owner: this.newUser.id}).exec()
+					.then((channelList) => {
+						var savePromises = [];
+						channelList.forEach((channel) => {
+							channel.twitterDestinations = [{
+								access_token_key: "access_token_key",
+								access_token_secret: "access_token_secret"
+							}];
+							savePromises.push(channel.save());
+						});
+						return Promise.all(savePromises);
+					})
+					.then(() => this.axios.put(this.newUser.id + '/channels/' + this.originalChannel._id, {
+						_id: this.originalChannel._id,
+						name: "Updated Name",
+						twitterDestinations: [{
+							accessToken: "access token",
+							expiresIn: now,
+							signedRequest: "signed request",
+							userId: "user id"
+						}]
+					}))
+					.then(()=> Channel.findOne({_id: this.originalChannel._id}))
+					.then((updatedChannel) => {
+						expect(updatedChannel._id.toString()).toBe(this.originalChannel._id.toString());
+						expect(updatedChannel.name).toBe("Updated Name");
+						expect(updatedChannel.twitterDestinations.length).toBe(1);
+						updatedChannel.twitterDestinations.forEach((destination)=> {
+							expect(destination.access_token_key).toBe("access_token_key");
+							expect(destination.access_token_secret).toBe("access_token_secret");
+						});
+						done();
+					})
+					.catch((error) => console.log("Couldn't update the channel: ", error));
+		});
+
 		it("should update a word press destination of a channel", function (done) {
 			Channel.find({owner: this.newUser.id}).exec()
 					.then((channelList) => {
