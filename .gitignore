@@ -5,3 +5,4 @@ node_modules/
 sjcl/
 client.min.js
 external_logins.js
+.idea/
