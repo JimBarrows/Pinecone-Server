@@ -1,7 +1,10 @@
 "use strict";
+var Account = require('pinecone-models/src/Account');
+import axios from "axios";
+import moment from "moment";
+import querystring from "querystring";
 var express           = require('express');
 var passport          = require('passport');
-var Account           = require('pinecone-models/src/Account');
 var router            = express.Router();
 const isAuthenticated = require('../authentication');
 
@@ -11,18 +14,49 @@ router.get('/', function (req, res) {
 });
 
 router.put('/facebookId', isAuthenticated, function (req, res) {
-	let owner = req.user.id;
-	let facebookUserId = req.body.facebookUserId;
-	Account.findOneAndUpdate({_id: owner}, {
-				facebookUserId
+	const owner = req.user.id;
+	const {facebookUserId, accessToken, expiresIn} = req.body;
+	console.log("req.body: ", req.body);
+
+	axios.get("https://graph.facebook.com/oauth/access_token", {
+				params: {
+					grant_type: "fb_exchange_token",
+					client_id: "1236802509686356",
+					client_secret: "80fd99d15c54490d6558e3883c1bc40f",
+					fb_exchange_token: accessToken
+				}
 			})
-			.exec()
-			.then((updatedAccount) => {
-				console.log("updated: ", updatedAccount);
+			.then((response) => {
+				const longTermToken = querystring.parse(response.data);
+				console.log("fb response: ", longTermToken);
+				return Account.findOneAndUpdate({_id: owner}, {
+					facebookUserId,
+					accessToken: longTermToken.access_token,
+					expiresIn: moment().add(longTermToken.expires, 'ms')
+				}).exec()
+			})
+			.then(() => {
 				res.status(200).end()
 			})
 			.catch((error) => {
 				console.log("Error updating account ", owner, " with error ", error);
+				res.status(400).end();
+			});
+})
+;
+
+router.get('/pageAcccessToken/:pageId', isAuthenticated, (req, res) => {
+	let {pageId} = req.params;
+	let user = req.user;
+	axios.get("https://graph.facebook.com/" + pageId, {
+				params: {
+					fields: "access_token",
+					access_token: user.accessToken
+				}
+			})
+			.then((response) => res.json({accessToken: response.data.access_token}).status(200).end())
+			.catch((error) => {
+				console.log("Couldn't get page access token for ", pageId, " because ", error);
 				res.status(400).end();
 			});
 });

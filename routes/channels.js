@@ -1,7 +1,8 @@
-const express         = require('express'),
-      router          = express.Router(),
-      isAuthenticated = require('../authentication');
+"use strict";
 import Channel from "pinecone-models/src/Channel";
+const express         = require('express'),
+      isAuthenticated = require('../authentication'),
+      router          = express.Router();
 
 
 /* GET home page. */
