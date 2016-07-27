@@ -18,3 +18,15 @@ export function toWordPress(contentId) {
 					.finally(() => ch.close()
 							.finally(()=> con.close())));
 }
+
+export function toFacebook(contentId) {
+	console.log("Sending to facebook: ", contentId);
+	const queueName  = "facebook";
+	const connection = amqp.connect('amqp://rabbitmq');
+	const channel    = connection.then((conn) =>conn.createChannel());
+	return promise.join(connection, channel, (con, ch) =>
+			ch.assertQueue(queueName, {durable: true})
+					.then((qok) => ch.sendToQueue(queueName, new Buffer(contentId.toString())))
+					.finally(() => ch.close()
+							.finally(()=> con.close())));
+}

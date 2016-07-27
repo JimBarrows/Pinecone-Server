@@ -21,13 +21,14 @@ router.get('/', isAuthenticated, function (req, res) {
 });
 
 router.post('/', isAuthenticated, function (req, res) {
-	let content = req.body;
-	content.createDate  = new Date(content.createDate);
-	content.owner       = req.user._id;
+	let content        = req.body;
+	content.createDate = new Date(content.createDate);
+	content.owner      = req.user._id;
 
 	Content.create(content)
 			.then((savedContent) => {
 				send.toWordPress(savedContent._id);
+				send.toFacebook((savedContent._id));
 				res.status(200).json(savedContent).end()
 			})
 			.catch((error) => {
@@ -40,7 +41,10 @@ router.put('/:contentId', isAuthenticated, function (req, res) {
 	let {contentId} = req.params;
 	Content.findOneAndUpdate({_id: contentId}, req.body)
 			.exec()
-			.then(() => res.status(200).end())
+			.then((savedContent) => {
+				send.toFacebook((savedContent._id));
+				res.status(200).end();
+			})
 			.catch((error) => {
 				console.log("Couldn't update the content ", req.body, " because ", error);
 				res.status(400).end();
