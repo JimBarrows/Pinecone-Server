@@ -29,6 +29,7 @@ router.post('/', isAuthenticated, function (req, res) {
 			.then((savedContent) => {
 				send.toWordPress(savedContent._id);
 				send.toFacebook((savedContent._id));
+				send.toTwitter((savedContent._id));
 				res.status(200).json(savedContent).end()
 			})
 			.catch((error) => {

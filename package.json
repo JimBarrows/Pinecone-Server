@@ -8,14 +8,17 @@
 	"email" : "jim@reallybigtree.com"
   },
   "scripts" : {
+	"pinecone:server:docker:build" : "docker build -t registry.gitlab.com/reallybigtree/pinecone-server .",
+	"pinecone:server:docker:push" : "docker push registry.gitlab.com/reallybigtree/pinecone-server",
+	"pinecone:server:docker:run:dev" : "docker run --detach --name pinecone-server -p 3000:3000 -v $(pwd):/usr/src/app --link pinecone-mongo:mongo --link pinecone-rabbitmq:rabbitmq registry.gitlab.com/reallybigtree/pinecone-server",
+	"pinecone:server:docker:run:staging" : "docker run --detach --name pinecone-server registry.gitlab.com/reallybigtree/pinecone-server",
 	"pinecone:server:start" : "nodemon --exec ./node_modules/.bin/babel-node --presets es2015,stage-2 ./bin/www",
-	"start" : "nodemon --exec ./node_modules/.bin/babel-node --presets es2015,stage-2 ./bin/www",
 	"pinecone:server:test:e2e" : "babel-node spec/run.js",
 	"pinecone:server:test:unit:single-run" : "karma start karma.conf.js --single-run",
 	"pinecone:server:update-webdriver" : "webdriver-manager update",
-	"pinecone:server:docker:run" : "docker run --detach --name pinecone-server -p 3000:3000 -v $(pwd):/usr/src/app --link pinecone-mongo:mongo --link pinecone-rabbitmq:rabbitmq registry.gitlab.com/reallybigtree/pinecone-server",
-	"pinecone:server:docker:build" : "docker build -t registry.gitlab.com/reallybigtree/pinecone-server .",
-	"pinecone:server:docker:push" : "docker push registry.gitlab.com/reallybigtree/pinecone-server"
+	"prepinecone:destinations:twitter:docker:build" : "npm install;npm prune",
+	"start" : "nodemon --exec ./node_modules/.bin/babel-node --presets es2015,stage-2 ./bin/www",
+	"update:models" : "rm -rf node_modules/pinecone-models; npm install"
   },
   "author" : {
 	"name" : "Jim Barrows",
