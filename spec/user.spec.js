@@ -64,8 +64,28 @@ describe('User functionality', function () {
 						expect(loggedInUser.id).toBe(newUser.id);
 						expect(loggedInUser.password).toBeUndefined();
 						done();
+					})
+					.catch((error) => {
+						console.log("Error: ", error);
 					});
-		})
+		});
+	});
 
-	})
+	describe("returning user information", function () {
+		it("should return user information when the user is logged in", function (done) {
+			this.axios.post('/user/register', user)
+					.then((response) => this.axios.post('/user/login', user))
+					.then((response) =>this.axios.get('/user', {headers: {"Cookie": response.headers['set-cookie']}}))
+					.then((response) => {
+						var retrievedUser = response.data;
+						expect(retrievedUser.username).toBe(user.username);
+						expect(retrievedUser.password).toBeUndefined();
+						expect(retrievedUser._id).toBeDefined();
+						done();
+					})
+					.catch((error) => {
+						console.log("Error: ", error);
+					});
+		});
+	});
 });

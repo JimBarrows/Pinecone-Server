@@ -3,20 +3,20 @@ var Account = require('pinecone-models/src/Account');
 import axios from "axios";
 import moment from "moment";
 import querystring from "querystring";
+import OAuth from "oauth-1.0a";
 var express           = require('express');
 var passport          = require('passport');
 var router            = express.Router();
 const isAuthenticated = require('../authentication');
 
 /* GET users listing. */
-router.get('/', function (req, res) {
-	res.send('respond with a resource. Foo.');
+router.get('/', isAuthenticated, function (req, res) {
+	res.json(req.user).status(200).end();
 });
 
 router.put('/facebookId', isAuthenticated, function (req, res) {
-	const owner = req.user.id;
+	const owner                                    = req.user.id;
 	const {facebookUserId, accessToken, expiresIn} = req.body;
-	console.log("req.body: ", req.body);
 
 	axios.get("https://graph.facebook.com/oauth/access_token", {
 				params: {
@@ -28,7 +28,6 @@ router.put('/facebookId', isAuthenticated, function (req, res) {
 			})
 			.then((response) => {
 				const longTermToken = querystring.parse(response.data);
-				console.log("fb response: ", longTermToken);
 				return Account.findOneAndUpdate({_id: owner}, {
 					facebookUserId,
 					accessToken: longTermToken.access_token,
@@ -42,12 +41,35 @@ router.put('/facebookId', isAuthenticated, function (req, res) {
 				console.log("Error updating account ", owner, " with error ", error);
 				res.status(400).end();
 			});
-})
-;
+});
+
+router.get('/twitterAccount', function (req, res) {
+	const oauth = OAuth({
+		consumer: {
+			public: "CEmmg8lwj4OQsTEw9orBF7VAc",
+			secret: "YrKdLxTB74VPrg1o4wsaK8moPEKG4bNmK6vawvlAgmSUoVuGBY"
+		}
+	});
+	axios.post('https://api.twitter.com/oauth/request_token', {}, {
+				headers: oauth.toHeader(
+						oauth.authorize({
+									url: 'https://api.twitter.com/oauth/request_token',
+									method: 'POST'
+								},
+								{}))
+			})
+			.then(function (response) {
+				res.send(querystring.parse(response.data)).status(200).end();
+			})
+			.catch(function (error) {
+				console.log("Error: ", error);
+				res.send(error.data).status(400).end();
+			});
+});
 
 router.get('/pageAcccessToken/:pageId', isAuthenticated, (req, res) => {
 	let {pageId} = req.params;
-	let user = req.user;
+	let user     = req.user;
 	axios.get("https://graph.facebook.com/" + pageId, {
 				params: {
 					fields: "access_token",
@@ -83,11 +105,7 @@ router.post('/register', function (req, res) {
 });
 
 router.post('/login', passport.authenticate('local'), function (req, res) {
-	res.json({
-		username: req.user.username
-		, id: req.user._id
-		, facebookUserId: req.user.facebookUserId
-	})
+	res.json(req.user).status(200).end();
 });
 
 router.get('/logout', function (req, res) {
