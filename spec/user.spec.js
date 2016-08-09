@@ -39,8 +39,8 @@ describe('User functionality', function () {
 						const newUser = response.data;
 						expect(newUser.username).toBe(user.username);
 						expect(newUser.password).toBeUndefined();
-						expect(newUser.id).toBeDefined();
-						newUserId = newUser.id;
+						expect(newUser._id).toBeDefined();
+						newUserId = newUser._id;
 						return Account.findOne({username: user.username}).exec();
 					})
 					.then(function (dbUser) {
@@ -64,7 +64,7 @@ describe('User functionality', function () {
 					.then((response) => {
 						let loggedInUser = response.data;
 						expect(loggedInUser.username).toBe(user.username);
-						expect(loggedInUser.id).toBe(newUser.id);
+						expect(loggedInUser._id).toBe(newUser._id);
 						expect(loggedInUser.password).toBeUndefined();
 						done();
 					})

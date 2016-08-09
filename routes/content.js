@@ -24,7 +24,6 @@ router.post('/', isAuthenticated, function (req, res) {
 	let content        = req.body;
 	content.createDate = new Date(content.createDate);
 	content.owner      = req.user._id;
-
 	Content.create(content)
 			.then((savedContent) => {
 				send.toWordPress(savedContent._id);

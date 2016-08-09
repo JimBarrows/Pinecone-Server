@@ -98,7 +98,7 @@ router.post('/register', function (req, res) {
 					console.log("While registering, could not manually authenticate user because ", err);
 					return next(err);
 				}
-				res.json({id: account._id, username: account.username});
+				res.json({_id: account._id, username: account.username});
 			});
 		});
 	});
