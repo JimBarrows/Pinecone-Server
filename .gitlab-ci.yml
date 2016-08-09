@@ -1,5 +1,23 @@
+before_script:
+  - npm install
+
+stages:
+  - install
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+npm_install:
+  image: node:4.2.2
+  script:
+    - npm install
+
 build_image:
   image: docker:git
+  stage: build
   services:
   - docker:dind
   script:
@@ -7,4 +25,4 @@ build_image:
     - docker build -t registry.gitlab.com/reallybigtree/pinecone-server .
     - docker push registry.gitlab.com/reallybigtree/pinecone-server
   only:
-    - develop
+    - Staging
