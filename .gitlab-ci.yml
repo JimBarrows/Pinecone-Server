@@ -12,6 +12,7 @@ cache:
 
 npm_install:
   image: node:4.2.2
+  stage: install
   script:
     - npm install
 
