@@ -54,7 +54,7 @@
     "passport-facebook" : "^2.1.1",
     "passport-local" : "^1.0.0",
     "passport-local-mongoose" : "^4.0.0",
-    "pinecone-models" : "git+https://gitlab.com/ReallyBigTree/Pinecone-Models.git#develop",
+    "pinecone-models" : "git+https://58:22:99:97:94:2c:6b:79:9b:be:1e:78:9e:58:7f:d4:x-oauth-basic@gitlab.com/ReallyBigTree/Pinecone-Models.git#develop",
     "rabbit.js" : "^0.4.4",
     "serve-favicon" : "~2.3.0",
     "twitter" : "^1.4.0"
