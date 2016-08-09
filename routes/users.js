@@ -105,6 +105,7 @@ router.post('/register', function (req, res) {
 });
 
 router.post('/login', passport.authenticate('local'), function (req, res) {
+	console.log("login: ", req.user);
 	res.json(req.user).status(200).end();
 });
 

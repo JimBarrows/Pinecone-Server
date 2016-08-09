@@ -4,7 +4,6 @@ const favicon      = require('serve-favicon');
 const logger       = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser   = require('body-parser');
-require('pinecone-models/src/index');
 const passport     = require('./passport.config.js');
 const index        = require('./routes/index');
 const users        = require('./routes/users');
