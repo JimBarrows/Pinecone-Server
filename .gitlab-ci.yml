@@ -30,10 +30,10 @@ npm_install:
   image: node:4.2.2
   stage: install
   variables:
-    fubarMuffin: npm version
+
 
   script:
-    - export
+    - set fubarMuffin=`npm version`
 
 build_staging:
   image: docker:git
