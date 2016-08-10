@@ -38,7 +38,7 @@ build_staging:
   - docker:dind
 
   script:
-    - export version = sh bin/version.sh
+    - export package_version = sh bin/version.sh
     - export
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t registry.gitlab.com/reallybigtree/pinecone-server .
