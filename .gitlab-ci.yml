@@ -16,18 +16,18 @@ npm_install:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
 
     # Run ssh-agent (inside the build environment)
-#    - eval $(ssh-agent -s)
+    - eval $(ssh-agent -s)
 
     # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
-#    - ssh-add < (echo "$SSH_PRIVATE_KEY")
+    - ssh-add < (echo "$SSH_PRIVATE_KEY")
 
     # For Docker builds disable host key checking. Be aware that by adding that
     # you are suspectible to man-in-the-middle attacks.
     # WARNING: Use this only with the Docker executor, if you use it with shell
     # you will overwrite your user's SSH config.
-#    - mkdir -p ~/.ssh
-#    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-#    - npm install
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - npm install
 
 build_staging:
   image: docker:git
@@ -37,9 +37,8 @@ build_staging:
   - docker:dind
   script:
     - export version=`npm version | grep pinecone | cut -f 2 -d ':' | cut -f 2 -d \'`
-    - echo $version
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t registry.gitlab.com/reallybigtree/pinecone-server .
+    - docker build -t registry.gitlab.com/reallybigtree/pinecone-server:$version .
     - docker push registry.gitlab.com/reallybigtree/pinecone-server
   only:
     - develop
