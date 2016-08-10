@@ -28,7 +28,8 @@ npm_install:
 #    - mkdir -p ~/.ssh
 #    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 #    - npm install
-    - sh bin/version.sh
+    - set fubarMuffin=`npm version`
+    - export
 
 build_staging:
   image: docker:git
