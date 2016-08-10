@@ -25,7 +25,7 @@ npm_install:
     # you are suspectible to man-in-the-middle attacks.
     # WARNING: Use this only with the Docker executor, if you use it with shell
     # you will overwrite your user's SSH config.
-    - mkdir -p ~/.ssh
+#    - mkdir -p ~/.ssh
 #    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 #    - npm install
 
