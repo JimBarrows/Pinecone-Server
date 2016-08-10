@@ -30,7 +30,7 @@ npm_install:
   image: node:4.2.2
   stage: install
   variables:
-    fubarMuffin: $(pwd)
+    fubarMuffin: npm version
 
   script:
     - export
