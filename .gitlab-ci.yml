@@ -42,11 +42,12 @@ build_staging:
   services:
   - docker:dind
   script:
+    - export
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t registry.gitlab.com/reallybigtree/pinecone-server .
     - docker push registry.gitlab.com/reallybigtree/pinecone-server
   only:
-    - staging
+    - develop
 
 build_production:
   image: docker:git
