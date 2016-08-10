@@ -37,9 +37,10 @@ build_staging:
   services:
   - docker:dind
   script:
+    - package_version=$(cat package.json | grep version | head -1 | awk -F: '{ print $2}' | sed 's/[",]//g')
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t registry.gitlab.com/reallybigtree/pinecone-server .
-    - docker push registry.gitlab.com/reallybigtree/pinecone-server:$(cat package.json | grep version | head -1 | awk -F: '{ print $2}' | sed 's/[",]//g')
+    - docker push registry.gitlab.com/reallybigtree/pinecone-server:$package_version
   only:
     - develop
 
