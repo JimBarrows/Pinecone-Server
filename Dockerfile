@@ -17,7 +17,7 @@ COPY authentication.js .
 COPY package.json .
 COPY passport.config.js .
 
-npm install
+RUN npm install
 
 
 CMD [ "npm", "start" ]
