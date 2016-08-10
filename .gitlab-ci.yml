@@ -13,7 +13,7 @@ npm_install:
   script:
     # Install ssh-agent if not already installed, it is required by Docker.
     # (change apt-get to yum if you use a CentOS-based image)
-#    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
 
     # Run ssh-agent (inside the build environment)
 #    - eval $(ssh-agent -s)
@@ -28,8 +28,6 @@ npm_install:
 #    - mkdir -p ~/.ssh
 #    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 #    - npm install
-    - export version=`npm version | grep pinecone | cut -f 2 -d ':' | cut -f 2 -d \'`
-    - export
 
 build_staging:
   image: docker:git
@@ -38,6 +36,7 @@ build_staging:
   services:
   - docker:dind
   script:
+    - export version=`npm version | grep pinecone | cut -f 2 -d ':' | cut -f 2 -d \'`
     - echo $version
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t registry.gitlab.com/reallybigtree/pinecone-server .
