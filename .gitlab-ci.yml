@@ -29,11 +29,8 @@ cache:
 npm_install:
   image: node:4.2.2
   stage: install
-  variables:
-
-
   script:
-    - set fubarMuffin=`npm version`
+    - sh bin/version.sh
 
 build_staging:
   image: docker:git
