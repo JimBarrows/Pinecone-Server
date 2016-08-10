@@ -28,7 +28,7 @@ npm_install:
 #    - mkdir -p ~/.ssh
 #    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 #    - npm install
-    - set fubarMuffin=`npm version`
+    - fubarMuffin=`npm version`
     - export
 
 build_staging:
