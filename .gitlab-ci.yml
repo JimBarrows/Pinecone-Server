@@ -36,11 +36,14 @@ build_staging:
   environment: staging
   services:
   - docker:dind
+  variables:
+    VERSION: $(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
   script:
-    - package_version=cat package.json | grep version | head -1 | awk -F: '{ print $2}' | sed 's/[",]//g'
+    - export
+#    - version = $(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t registry.gitlab.com/reallybigtree/pinecone-server .
-    - docker push registry.gitlab.com/reallybigtree/pinecone-server:$package_version
+    - docker push registry.gitlab.com/reallybigtree/pinecone-server:$version
   only:
     - develop
 
