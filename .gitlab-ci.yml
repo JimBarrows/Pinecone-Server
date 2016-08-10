@@ -38,7 +38,7 @@ build_staging:
   script:
     - export version=`npm version | grep pinecone | cut -f 2 -d ':' | cut -f 2 -d \'`
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t registry.gitlab.com/reallybigtree/pinecone-server:$version .
+    - docker build -t registry.gitlab.com/reallybigtree/pinecone-server:$CI_BUILD_ID .
     - docker push registry.gitlab.com/reallybigtree/pinecone-server
   only:
     - develop
