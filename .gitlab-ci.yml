@@ -15,15 +15,21 @@ before_script:
   # you will overwrite your user's SSH config.
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-  - npm install
 
 stages:
+  - install
   - build
   - deploy
 
 cache:
   paths:
     - node_modules/
+
+npm_install:
+  image: node:4.2.2
+  stage: install
+  script:
+    - npm install
 
 build_staging:
   image: docker:git
