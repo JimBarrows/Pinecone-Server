@@ -8,7 +8,6 @@ WORKDIR /usr/src/app
 
 COPY bin bin
 COPY messaging messaging
-COPY node_modules node_modules
 COPY public public
 COPY routes routes
 COPY views views
@@ -17,6 +16,8 @@ COPY authentication.js .
 COPY external_logins.js .
 COPY package.json .
 COPY passport.config.js .
+
+npm install
 
 
 CMD [ "npm", "start" ]
