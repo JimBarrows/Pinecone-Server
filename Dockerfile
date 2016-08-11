@@ -2,6 +2,8 @@ FROM node
 
 EXPOSE 3000
 
+ENV NODE_ENV="production"
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
@@ -13,7 +15,7 @@ COPY routes routes
 COPY views views
 COPY app.js .
 COPY authentication.js .
-#COPY external_logins.js .
+COPY external_logins.js .
 COPY package.json .
 COPY passport.config.js .
 

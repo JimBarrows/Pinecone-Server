@@ -4,5 +4,3 @@ node_modules/
 *.zip
 sjcl/
 client.min.js
-external_logins.js
-.idea/
