@@ -8,7 +8,7 @@
 	"email" : "jim@reallybigtree.com"
   },
   "scripts" : {
-	"pinecone:server:docker:build" : "docker build -t registry.gitlab.com/reallybigtree/pinecone-server .",
+	"pinecone:server:docker:build" : "docker build --build-arg NPM_TOKEN=6f3bcf35-125d-40da-bfab-dcfb6efece79 -t registry.gitlab.com/reallybigtree/pinecone-server .",
 	"pinecone:server:docker:push" : "docker push registry.gitlab.com/reallybigtree/pinecone-server",
 	"pinecone:server:docker:run:dev" : "docker run --detach --name pinecone-server -p 3000:3000 -v $(pwd):/usr/src/app --link pinecone-mongo:mongo --link pinecone-rabbitmq:rabbitmq registry.gitlab.com/reallybigtree/pinecone-server",
 	"pinecone:server:docker:run:staging" : "docker run --detach --name pinecone-server registry.gitlab.com/reallybigtree/pinecone-server",

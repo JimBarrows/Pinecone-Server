@@ -2,6 +2,7 @@ FROM node
 
 EXPOSE 3000
 
+ARG NPM_TOKEN
 ENV NODE_ENV="production"
 
 RUN mkdir -p /usr/src/app
@@ -18,8 +19,8 @@ COPY authentication.js .
 COPY external_logins.js .
 COPY package.json .
 COPY passport.config.js .
-
-RUN npm install
-
+COPY .npmrc .npmrc
+RUN npm install --production --no-optional
+RUN rm -f .npmrc
 
 CMD [ "npm", "start" ]
