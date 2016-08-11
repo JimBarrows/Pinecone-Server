@@ -3,8 +3,8 @@
  */
 'use strict';
 const mongoose = require('mongoose')
-		, Account  = require("pinecone-models/src/Account")
-		, Channel  = require("pinecone-models/src/Channel")
+		, Account  = require("@reallybigtree/pinecone-models/src/Account")
+		, Channel  = require("@reallybigtree/pinecone-models/src/Channel")
 		, axios    = require("axios")
 		, Promise  = require("bluebird")
 		, moment   = require("moment");

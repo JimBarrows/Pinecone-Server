@@ -4,6 +4,9 @@ const favicon      = require('serve-favicon');
 const logger       = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser   = require('body-parser');
+const mongoose     = require('mongoose')
+		, Promise      = require('bluebird');
+const process      = require('process');
 const passport     = require('./passport.config.js');
 const index        = require('./routes/index');
 const users        = require('./routes/users');
@@ -11,6 +14,13 @@ const auth         = require('./routes/auth');
 const channels     = require('./routes/channels');
 const content      = require('./routes/content');
 const app          = express();
+import Configuration from "./configurations";
+const env    = process.env.NODE_ENV || "development";
+const config = Configuration[env];
+console.log("config: ", config);
+
+mongoose.Promise = Promise;
+mongoose.connect(config.mongoose.url);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

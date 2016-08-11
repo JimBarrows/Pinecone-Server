@@ -1,6 +1,6 @@
 'use strict';
 const mongoose = require('mongoose')
-		, Account  = require("pinecone-models/src/Account")
+		, Account  = require("@reallybigtree/pinecone-models/src/Account")
 		, axios    = require("axios");
 
 describe('User functionality', function () {

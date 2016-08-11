@@ -1,5 +1,5 @@
 "use strict";
-var Account = require('pinecone-models/src/Account');
+var Account = require('@reallybigtree/pinecone-models/src/Account');
 import axios from "axios";
 import moment from "moment";
 import querystring from "querystring";
@@ -41,6 +41,15 @@ router.put('/facebookId', isAuthenticated, function (req, res) {
 				console.log("Error updating account ", owner, " with error ", error);
 				res.status(400).end();
 			});
+});
+
+router.post('/login', passport.authenticate('local'), function (req, res) {
+	res.json(req.user).status(200).end();
+});
+
+router.get('/logout', function (req, res) {
+	req.logout();
+	res.status(200).end();
 });
 
 router.get('/twitterAccount', function (req, res) {
@@ -85,32 +94,22 @@ router.get('/pageAcccessToken/:pageId', isAuthenticated, (req, res) => {
 
 router.post('/register', function (req, res) {
 	Account.register(new Account({
-		username: req.body.username,
-		facebookUserId: ''
+		username: req.body.username
 	}), req.body.password, function (err, account) {
 		if (err) {
 			console.log("While registering, could not register user because ", err);
-			return res.json({error: err.message});
+			res.json({error: err.message}).status(400).end();
 		}
 		passport.authenticate('local')(req, res, function () {
 			req.session.save(function (err) {
 				if (err) {
 					console.log("While registering, could not manually authenticate user because ", err);
-					return next(err);
+					res.json({error: err.message}).status(400).end();
 				}
-				res.json({_id: account._id, username: account.username});
+				res.json(account).status(200).end();
 			});
 		});
 	});
-});
-
-router.post('/login', passport.authenticate('local'), function (req, res) {
-	res.json(req.user).status(200).end();
-});
-
-router.get('/logout', function (req, res) {
-	req.logout();
-	res.status(200).end();
 });
 
 module.exports = router;

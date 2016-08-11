@@ -1,5 +1,5 @@
 "use strict";
-import Channel from "pinecone-models/src/Channel";
+import Channel from "@reallybigtree/pinecone-models/src/Channel";
 const express         = require('express'),
       isAuthenticated = require('../authentication'),
       router          = express.Router();
