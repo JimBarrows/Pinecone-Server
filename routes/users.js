@@ -1,12 +1,13 @@
 "use strict";
-var Account = require('@reallybigtree/pinecone-models/src/Account');
+import Account from "@reallybigtree/pinecone-models";
 import axios from "axios";
+import express from "express";
 import moment from "moment";
+import passport from "passport";
 import querystring from "querystring";
 import OAuth from "oauth-1.0a";
-var express           = require('express');
-var passport          = require('passport');
-var router            = express.Router();
+
+const router          = express.Router();
 const isAuthenticated = require('../authentication');
 
 /* GET users listing. */
