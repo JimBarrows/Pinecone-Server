@@ -1,21 +1,24 @@
-const express      = require('express');
-const path         = require('path');
-const favicon      = require('serve-favicon');
-const logger       = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser   = require('body-parser');
-const mongoose     = require('mongoose')
-		, Promise      = require('bluebird');
-const process      = require('process');
-const passport     = require('./passport.config.js');
-const index        = require('./routes/index');
-const users        = require('./routes/users');
-const auth         = require('./routes/auth');
-const campaigns    = require('./routes/campaigns');
-const campaign     = require('./routes/campaign');
-const content      = require('./routes/content');
-const app          = express();
+'use strict';
+import bodyParser from "body-parser";
 import Configuration from "./configurations";
+import cookieParser from "cookie-parser";
+import express from "express";
+import logger from "morgan";
+import mongoose from "mongoose";
+import passport from "./passport.config";
+import path from "path";
+import process from "process";
+import Promise from "bluebird";
+
+const auth      = require('./routes/auth');
+const campaign  = require('./routes/campaign');
+const campaigns = require('./routes/campaigns');
+const content   = require('./routes/content');
+const index     = require('./routes/index');
+const users     = require('./routes/users');
+
+
+const app    = express();
 const env    = process.env.NODE_ENV || "development";
 const config = Configuration[env];
 console.log("config: ", config);
@@ -42,36 +45,13 @@ app.use(passport.session());
 
 app.use('/', index);
 app.use('/api/campaigns', campaigns);
-// app.use('/api/campaigns/:campaignid', campaign);
+app.use('/api/campaign', campaign);
 app.use('/api/content', content);
 app.use('/api/user', users);
 app.use('/auth', auth);
 
-app.use(function (req, res, next) {
-	const err  = new Error('Not Found');
-	err.status = 404;
-	next(err);
+app.use(function (req, res) {
+	res.status(500).end();
 });
-
-if (app.get('env') === 'development') {
-	app.use(function (err, req, res) {
-		res.status(err.status || 500);
-		res.render('error', {
-			message: err.message,
-			error: err
-		});
-	});
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function (err, req, res) {
-	res.status(err.status || 500);
-	res.render('error', {
-		message: err.message,
-		error: {}
-	});
-});
-
 
 module.exports = app;
