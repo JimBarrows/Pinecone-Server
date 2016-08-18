@@ -27,7 +27,6 @@ mongoose.connect(config.mongoose.url);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-console.log("Setting up use");
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -41,7 +40,6 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
-console.log("Seting api's and routes");
 app.use('/', index);
 app.use('/api/campaigns', campaigns);
 // app.use('/api/campaigns/:campaignid', campaign);
@@ -49,14 +47,12 @@ app.use('/api/content', content);
 app.use('/api/user', users);
 app.use('/auth', auth);
 
-console.log("Error handling");
 app.use(function (req, res, next) {
 	const err  = new Error('Not Found');
 	err.status = 404;
 	next(err);
 });
 
-console.log("Environment based error handling");
 if (app.get('env') === 'development') {
 	app.use(function (err, req, res) {
 		res.status(err.status || 500);
@@ -69,7 +65,6 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-console.log("roduction error handler handling");
 app.use(function (err, req, res) {
 	res.status(err.status || 500);
 	res.render('error', {

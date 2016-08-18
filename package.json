@@ -13,7 +13,7 @@
 	"pinecone:server:docker:run:dev" : "docker run --detach --name pinecone-server -p 3000:3000 -v $(pwd):/usr/src/app --link pinecone-mongo:mongo --link pinecone-rabbitmq:rabbitmq registry.gitlab.com/reallybigtree/pinecone-server",
 	"pinecone:server:docker:run:staging" : "docker run --detach --name pinecone-server registry.gitlab.com/reallybigtree/pinecone-server",
 	"pinecone:server:start" : "nodemon --exec ./node_modules/.bin/babel-node --presets es2015,stage-2 ./bin/www",
-	"pinecone:server:test:e2e" : "mocha  --compilers js:babel-core/register",
+	"pinecone:server:test:e2e" : "mocha -t 100000 --compilers js:babel-core/register",
 	"pinecone:server:test:unit:single-run" : "karma start karma.conf.js --single-run",
 	"pinecone:server:update-webdriver" : "webdriver-manager update",
 	"prepinecone:destinations:twitter:docker:build" : "npm install;npm prune",
@@ -31,7 +31,7 @@
 	"url" : "https://gitlab.com/ReallyBigTree/Pinecone-Server/tree/master"
   },
   "dependencies" : {
-	"@reallybigtree/pinecone-models" : "^1.1.2",
+	"@reallybigtree/pinecone-models" : "^1.1.4",
 	"amqplib" : "^0.4.2",
 	"babel-cli" : "^6.10.1",
 	"babel-core" : "^6.10.4",

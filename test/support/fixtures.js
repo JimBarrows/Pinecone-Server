@@ -28,12 +28,12 @@ export function createAccount() {
 }
 
 export function login(axios) {
-	axios.post('/user/login', {username: user.username, password: user.password})
+	return axios.post('/user/login', {username: user.username, password: user.password})
 			.then((response) => {
-				if (!this.axios.defaults.headers) {
-					this.axios.defaults.headers = {}
+				if (!axios.defaults.headers) {
+					axios.defaults.headers = {}
 				}
-				this.axios.defaults.headers.cookie = response.headers['set-cookie'];
+				axios.defaults.headers.cookie = response.headers['set-cookie'];
 				return response.data;
 			})
 }
