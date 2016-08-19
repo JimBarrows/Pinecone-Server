@@ -1,5 +1,5 @@
 "use strict";
-import Account from "@reallybigtree/pinecone-models";
+import {Account} from "@reallybigtree/pinecone-models";
 import axios from "axios";
 import express from "express";
 import moment from "moment";
