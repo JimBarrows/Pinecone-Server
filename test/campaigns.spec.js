@@ -27,7 +27,7 @@ describe("/api/campaigns", function () {
 					loggedInUser = liu;
 					done()
 				})
-				.catch((error) => console.log("Error setting up channel services: ", error));
+				.catch((error) => done(error));
 
 	});
 
