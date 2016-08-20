@@ -70,7 +70,6 @@ describe("/api/content", function () {
 			client.get('/content')
 					.then((response) => {
 						let contentList = response.data;
-						console.log("contentList: ", contentList);
 						expect(contentList.length).to.be.equal(1);
 						expect(contentList[0].body).to.be.equal("body 1");
 						expect(contentList[0].createDate).to.be.equal(date.toISOString());
