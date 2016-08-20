@@ -39,9 +39,23 @@ describe('/api/user', function () {
 					});
 		});
 	});
+});
 
-	describe("/api/user/register", function () {
 
+describe("/api/user/register", function () {
+	var client = {};
+
+	beforeEach(function (done) {
+		client = axios.create({
+			baseURL: 'http://localhost:3000/api',
+			timeout: 10000
+		});
+		cleanDatabase()
+				.then(()=> done())
+				.catch((error) => done(error));
+
+	});
+	describe("post method", function () {
 		it("allows the service client to create a user", function (done) {
 			let newUserId = '';
 			client.post('/user/register', user)
@@ -62,8 +76,22 @@ describe('/api/user', function () {
 					.catch((error) => done(error));
 		});
 	});
+});
 
-	describe("/api/user/login", function () {
+describe("/api/user/login", function () {
+	var client = {};
+
+	beforeEach(function (done) {
+		client = axios.create({
+			baseURL: 'http://localhost:3000/api',
+			timeout: 10000
+		});
+		cleanDatabase()
+				.then(()=> done())
+				.catch((error) => done(error));
+
+	});
+	describe("post method", function () {
 		it("Should allow a user login", function (done) {
 			let newUser = {};
 			client.post('/user/register', user)
@@ -83,5 +111,4 @@ describe('/api/user', function () {
 					});
 		});
 	});
-
 });
