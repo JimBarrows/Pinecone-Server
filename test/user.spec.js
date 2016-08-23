@@ -70,6 +70,7 @@ describe('/api/user/asset/:assetId', function () {
 			};
 			Account.findByIdAndUpdate(id, {$push: {assets: asset}}, {new: true})
 					.then((updatedAccount) => client.put('/user/asset/' + updatedAccount.assets[0]._id, {
+						_id: updatedAccount.assets[0]._id,
 						name: "test asset updated",
 						type: "gif",
 						size: 2000,
