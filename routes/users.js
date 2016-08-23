@@ -21,6 +21,14 @@ router.post("/assets", isAuthenticated, function (req, res) {
 	}).then(() => res.status(200).end());
 });
 
+router.put("/asset/:assetId", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id, "assets._id": req.params.assetId}, {
+		"$set": {
+			"assets.$": req.body
+		}
+	}).then(() => res.status(200).end());
+});
+
 router.put('/facebookId', isAuthenticated, function (req, res) {
 	const owner                                    = req.user.id;
 	const {facebookUserId, accessToken, expiresIn} = req.body;

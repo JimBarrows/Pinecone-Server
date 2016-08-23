@@ -41,6 +41,58 @@ describe('/api/user', function () {
 	});
 });
 
+describe('/api/user/asset/:assetId', function () {
+
+	var client = {};
+	var id     = null;
+
+	beforeEach(function (done) {
+		client = axios.create({
+			baseURL: 'http://localhost:3000/api',
+			timeout: 10000
+		});
+		cleanDatabase()
+				.then(()=>createAccount())
+				.then((account)=> id = account._id)
+				.then(()=>login(client))
+				.then(()=> done())
+				.catch((error) => done(error));
+
+	});
+
+	describe("put method", function () {
+		it("must update an asset in the accounts document", function (done) {
+			let asset = {
+				name: "test asset",
+				type: "png",
+				size: 1000,
+				url: "http://localhost"
+			};
+			Account.findByIdAndUpdate(id, {$push: {assets: asset}}, {new: true})
+					.then((updatedAccount) => client.put('/user/asset/' + updatedAccount.assets[0]._id, {
+						name: "test asset updated",
+						type: "gif",
+						size: 2000,
+						url: "http://localhost/updated"
+					}))
+					.then(() => Account.findById(id))
+					.then((account)=> {
+						expect(account.assets.length).to.be.equal(1);
+						const asset = account.assets[0];
+						expect(asset.name).to.be.equal("test asset updated");
+						expect(asset.type).to.be.equal("gif");
+						expect(asset.size).to.be.equal(2000);
+						expect(asset.url).to.be.equal("http://localhost/updated");
+					})
+					.then(()=> done())
+					.catch((error)=> {
+						console.log("error: ", error);
+						done(new Error(error))
+					});
+		});
+	});
+});
+
 describe('/api/user/assets', function () {
 
 	var client = {};
