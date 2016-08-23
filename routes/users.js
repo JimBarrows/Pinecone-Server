@@ -15,6 +15,13 @@ router.get('/', isAuthenticated, function (req, res) {
 	res.json(req.user).status(200).end();
 });
 
+router.post("/assets", isAuthenticated, function (req, res) {
+	console.log("/assets: ", req.body);
+	Account.findByIdAndUpdate(req.user._id, {
+		$push: {assets: req.body}
+	}).then(() => res.status(200).end());
+});
+
 router.put('/facebookId', isAuthenticated, function (req, res) {
 	const owner                                    = req.user.id;
 	const {facebookUserId, accessToken, expiresIn} = req.body;
@@ -53,30 +60,6 @@ router.get('/logout', function (req, res) {
 	res.status(200).end();
 });
 
-router.get('/twitterAccount', function (req, res) {
-	const oauth = OAuth({
-		consumer: {
-			public: "CEmmg8lwj4OQsTEw9orBF7VAc",
-			secret: "YrKdLxTB74VPrg1o4wsaK8moPEKG4bNmK6vawvlAgmSUoVuGBY"
-		}
-	});
-	axios.post('https://api.twitter.com/oauth/request_token', {}, {
-				headers: oauth.toHeader(
-						oauth.authorize({
-									url: 'https://api.twitter.com/oauth/request_token',
-									method: 'POST'
-								},
-								{}))
-			})
-			.then(function (response) {
-				res.send(querystring.parse(response.data)).status(200).end();
-			})
-			.catch(function (error) {
-				console.log("Error: ", error);
-				res.send(error.data).status(400).end();
-			});
-});
-
 router.get('/pageAcccessToken/:pageId', isAuthenticated, (req, res) => {
 	let {pageId} = req.params;
 	let user     = req.user;
@@ -111,6 +94,30 @@ router.post('/register', function (req, res) {
 			});
 		});
 	});
+});
+
+router.get('/twitterAccount', function (req, res) {
+	const oauth = OAuth({
+		consumer: {
+			public: "CEmmg8lwj4OQsTEw9orBF7VAc",
+			secret: "YrKdLxTB74VPrg1o4wsaK8moPEKG4bNmK6vawvlAgmSUoVuGBY"
+		}
+	});
+	axios.post('https://api.twitter.com/oauth/request_token', {}, {
+				headers: oauth.toHeader(
+						oauth.authorize({
+									url: 'https://api.twitter.com/oauth/request_token',
+									method: 'POST'
+								},
+								{}))
+			})
+			.then(function (response) {
+				res.send(querystring.parse(response.data)).status(200).end();
+			})
+			.catch(function (error) {
+				console.log("Error: ", error);
+				res.send(error.data).status(400).end();
+			});
 });
 
 module.exports = router;
