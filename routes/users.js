@@ -16,7 +16,6 @@ router.get('/', isAuthenticated, function (req, res) {
 });
 
 router.post("/assets", isAuthenticated, function (req, res) {
-	console.log("/assets: ", req.body);
 	Account.findByIdAndUpdate(req.user._id, {
 		$push: {assets: req.body}
 	}).then(() => res.status(200).end());
