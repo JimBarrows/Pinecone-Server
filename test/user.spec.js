@@ -60,6 +60,30 @@ describe('/api/user/asset/:assetId', function () {
 
 	});
 
+	describe("delete method", function () {
+
+		it("must delete an asset in the accounts document", function (done) {
+			let asset = {
+				name: "test asset",
+				type: "png",
+				size: 1000,
+				url: "http://localhost"
+			};
+			Account.findByIdAndUpdate(id, {$push: {assets: asset}}, {new: true})
+					.then((updatedAccount) => client.delete('/user/asset/' + updatedAccount.assets[0]._id))
+					.then(() => Account.findById(id))
+					.then((account) => {
+						let {assets} = account;
+						expect(assets.length).to.be.equal(0);
+					})
+					.then(()=> done())
+					.catch((error)=> {
+						console.log("error: ", error);
+						done(new Error(error))
+					});
+		})
+	});
+
 	describe("put method", function () {
 		it("must update an asset in the accounts document", function (done) {
 			let asset = {

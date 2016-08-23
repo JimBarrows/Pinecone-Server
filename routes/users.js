@@ -3,12 +3,14 @@ import {Account} from "@reallybigtree/pinecone-models";
 import axios from "axios";
 import express from "express";
 import moment from "moment";
+import mongoose from "mongoose";
 import passport from "passport";
 import querystring from "querystring";
 import OAuth from "oauth-1.0a";
 
 const router          = express.Router();
 const isAuthenticated = require('../authentication');
+const {ObjectId}      = mongoose.Types;
 
 /* GET users listing. */
 router.get('/', isAuthenticated, function (req, res) {
@@ -25,6 +27,14 @@ router.put("/asset/:assetId", isAuthenticated, function (req, res) {
 	Account.findOneAndUpdate({_id: req.user._id, "assets._id": req.params.assetId}, {
 		"$set": {
 			"assets.$": req.body
+		}
+	}).then(() => res.status(200).end());
+});
+
+router.delete("/asset/:assetId", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id}, {
+		"$pull": {
+			"assets": {_id: new ObjectId(req.params.assetId)}
 		}
 	}).then(() => res.status(200).end());
 });
