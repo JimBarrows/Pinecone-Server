@@ -34,6 +34,33 @@ describe("/campaign/:campaignId", function () {
 
 	});
 
+	describe("delete method", function () {
+
+		var campaign = {};
+
+		beforeEach(function (done) {
+			Campaign.create({
+						name: 'Test Campaign 1',
+						owner: loggedInUser._id
+					})
+					.then(function (newCampaign) {
+						campaign = newCampaign;
+						done();
+					})
+					.catch(function (error) {
+						console.log("/api/campaign/:campaignId get method beforeAll error: ", error);
+						done(error);
+					})
+		});
+		it("must delete the campaign from the database", (done)=> {
+			client.delete('/campaign/' + campaign._id)
+					.then((response)=>Campaign.findById(campaign._id))
+					.then((campaign)=>expect(campaign).to.be.null)
+					.then(()=> done())
+					.catch((error) => done(error))
+		})
+	});
+
 	describe("get method", function () {
 
 		var campaign = {};
