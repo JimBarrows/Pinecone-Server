@@ -17,9 +17,11 @@ router.get('/', isAuthenticated, function (req, res) {
 	res.json(req.user).status(200).end();
 });
 
-router.post("/assets", isAuthenticated, function (req, res) {
-	Account.findByIdAndUpdate(req.user._id, {
-		$push: {assets: req.body}
+router.delete("/asset/:assetId", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id}, {
+		"$pull": {
+			"assets": {_id: new ObjectId(req.params.assetId)}
+		}
 	}).then(() => res.status(200).end());
 });
 
@@ -31,11 +33,31 @@ router.put("/asset/:assetId", isAuthenticated, function (req, res) {
 	}).then(() => res.status(200).end());
 });
 
-router.delete("/asset/:assetId", isAuthenticated, function (req, res) {
+router.post("/assets", isAuthenticated, function (req, res) {
+	Account.findByIdAndUpdate(req.user._id, {
+		$push: {assets: req.body}
+	}).then(() => res.status(200).end());
+});
+
+router.delete("/destination/:id", isAuthenticated, function (req, res) {
 	Account.findOneAndUpdate({_id: req.user._id}, {
 		"$pull": {
-			"assets": {_id: new ObjectId(req.params.assetId)}
+			"destinations": {_id: new ObjectId(req.params.id)}
 		}
+	}).then(() => res.status(200).end());
+});
+
+router.put("/destination/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id, "destinations._id": req.params.id}, {
+		"$set": {
+			"destinations.$": req.body
+		}
+	}).then(() => res.status(200).end());
+});
+
+router.post("/destinations", isAuthenticated, function (req, res) {
+	Account.findByIdAndUpdate(req.user._id, {
+		$push: {destinations: req.body}
 	}).then(() => res.status(200).end());
 });
 
@@ -68,6 +90,28 @@ router.put('/facebookId', isAuthenticated, function (req, res) {
 			});
 });
 
+router.delete("/keyword/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id}, {
+		"$pull": {
+			"keywords": {_id: new ObjectId(req.params.id)}
+		}
+	}).then(() => res.status(200).end());
+});
+
+router.put("/keyword/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id, "keywords._id": req.params.id}, {
+		"$set": {
+			"keywords.$": req.body
+		}
+	}).then(() => res.status(200).end());
+});
+
+router.post("/keywords", isAuthenticated, function (req, res) {
+	Account.findByIdAndUpdate(req.user._id, {
+		$push: {keywords: req.body}
+	}).then(() => res.status(200).end());
+});
+
 router.post('/login', passport.authenticate('local'), function (req, res) {
 	res.json(req.user).status(200).end();
 });
@@ -75,6 +119,29 @@ router.post('/login', passport.authenticate('local'), function (req, res) {
 router.get('/logout', function (req, res) {
 	req.logout();
 	res.status(200).end();
+});
+
+
+router.delete("/message/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id}, {
+		"$pull": {
+			"messages": {_id: new ObjectId(req.params.id)}
+		}
+	}).then(() => res.status(200).end());
+});
+
+router.put("/message/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id, "messages._id": req.params.id}, {
+		"$set": {
+			"messages.$": req.body
+		}
+	}).then(() => res.status(200).end());
+});
+
+router.post("/messages", isAuthenticated, function (req, res) {
+	Account.findByIdAndUpdate(req.user._id, {
+		$push: {messages: req.body}
+	}).then(() => res.status(200).end());
 });
 
 router.get('/pageAcccessToken/:pageId', isAuthenticated, (req, res) => {
