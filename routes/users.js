@@ -204,4 +204,41 @@ router.get('/twitterAccount', function (req, res) {
 			});
 });
 
+router.delete("/wordpressAccount/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id}, {
+		"$pull": {
+			"wordpressAccounts": {_id: new ObjectId(req.params.id)}
+		}
+	}).then(() => res.status(200).end())
+			.catch(function (error) {
+				console.log("Error: ", error);
+				res.send(error.data).status(400).end();
+			});
+});
+
+router.put("/wordpressAccount/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id, "wordpressAccounts._id": req.params.id}, {
+		"$set": {
+			"wordpressAccounts.$": req.body
+		}
+	}).then(() => res.status(200).end())
+			.catch(function (error) {
+				console.log("Error: ", error);
+				res.send(error.data).status(400).end();
+			});
+});
+
+router.post("/wordpressAccounts", isAuthenticated, function (req, res) {
+	console.log("req.body: ", req.body);
+	Account
+			.findByIdAndUpdate(req.user._id, {
+				$push: {wordpressAccounts: req.body}
+			})
+			.then(() => res.status(200).end())
+			.catch(function (error) {
+				console.log("Error: ", error);
+				res.send(error.data).status(400).end();
+			});
+});
+
 module.exports = router;
