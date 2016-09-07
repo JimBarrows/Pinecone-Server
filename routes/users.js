@@ -1,16 +1,21 @@
 "use strict";
 import {Account} from "@reallybigtree/pinecone-models";
 import axios from "axios";
+import Configuration from "../configurations";
 import express from "express";
 import moment from "moment";
 import mongoose from "mongoose";
 import passport from "passport";
 import querystring from "querystring";
-import OAuth from "oauth-1.0a";
-
-const router          = express.Router();
+import obtainRequestToken from "../twitterApi/TwitterApi";
 const isAuthenticated = require('../authentication');
-const {ObjectId}      = mongoose.Types;
+
+const env                  = process.env.NODE_ENV || "development";
+const router               = express.Router();
+const {ObjectId}           = mongoose.Types;
+const twitterConfiguration = Configuration[env].twitter;
+console.log("users twitterConfiguration: ", twitterConfiguration);
+
 
 /* GET users listing. */
 router.get('/', isAuthenticated, function (req, res) {
@@ -180,27 +185,57 @@ router.post('/register', function (req, res) {
 	});
 });
 
-router.get('/twitterAccount', function (req, res) {
-	const oauth = OAuth({
-		consumer: {
-			public: "CEmmg8lwj4OQsTEw9orBF7VAc",
-			secret: "YrKdLxTB74VPrg1o4wsaK8moPEKG4bNmK6vawvlAgmSUoVuGBY"
+router.delete("/twitterAccount/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id}, {
+		"$pull": {
+			"twitterAccounts": {_id: new ObjectId(req.params.id)}
 		}
-	});
-	axios.post('https://api.twitter.com/oauth/request_token', {}, {
-				headers: oauth.toHeader(
-						oauth.authorize({
-									url: 'https://api.twitter.com/oauth/request_token',
-									method: 'POST'
-								},
-								{}))
-			})
-			.then(function (response) {
-				res.send(querystring.parse(response.data)).status(200).end();
-			})
+	}).then(() => res.status(200).end())
 			.catch(function (error) {
 				console.log("Error: ", error);
 				res.send(error.data).status(400).end();
+			});
+});
+
+router.get("/twitterAccount/finish", isAuthenticated, function (req, res) {
+	Account.findById(req.user._id)
+			.then((account)=> {
+				let twitterAccount = account.twitterAccounts.find((acc) => !(acc.accessToken && acc.accessTokenSecret));
+				if (twitterAccount) {
+					twitterAccount.accessToken       = req.query.oauth_token;
+					twitterAccount.accessTokenSecret = req.query.oauth_verifier;
+				}
+				return account.save();
+			})
+			.then(() => res.redirect("/#/settings").end())
+			.catch((error) => {
+				console.log("/twitterAccount/finish error: ", error);
+				res.status(400).end();
+			});
+});
+
+router.put("/twitterAccount/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id, "twitterAccounts._id": req.params.id}, {
+				"$set": {
+					"twitterAccounts.$": req.body
+				}
+			})
+			.then(() => res.status(200).end())
+			.catch(function (error) {
+				console.log("Error: ", error);
+				res.send(error.data).status(400).end();
+			});
+});
+
+router.post("/twitterAccounts", isAuthenticated, function (req, res) {
+	let twitterAccount = req.body;
+
+	Account.findByIdAndUpdate(req.user._id, {$push: {twitterAccounts: twitterAccount}})
+			.then(() => obtainRequestToken(req.user._id))
+			.then((response) => res.json(querystring.parse(response.data)).status(200).end())
+			.catch(function (error) {
+				console.log("Error: ", error);
+				res.send(error).status(400).end();
 			});
 });
 
@@ -229,7 +264,6 @@ router.put("/wordpressAccount/:id", isAuthenticated, function (req, res) {
 });
 
 router.post("/wordpressAccounts", isAuthenticated, function (req, res) {
-	console.log("req.body: ", req.body);
 	Account
 			.findByIdAndUpdate(req.user._id, {
 				$push: {wordpressAccounts: req.body}
