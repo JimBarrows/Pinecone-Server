@@ -5,6 +5,15 @@
 
 export  default {
 	development: {
+		facebook: {
+			clientId: "1236802509686356",
+			clientSecret: "80fd99d15c54490d6558e3883c1bc40f",
+			finishUrl: "http://127.0.0.1:8080/api/user/facebookAccount/finish/",
+			grantType: "fb_exchange_token",
+			requestTokenUrl: "https://graph.facebook.com/oauth/access_token",
+			requestTokenUrlMethod: "POST"
+
+		},
 		mongoose: {
 			url: "mongodb://localhost/pinecone"
 		},
@@ -23,6 +32,15 @@ export  default {
 		}
 	},
 	production: {
+		facebook: {
+			clientId: "1236802509686356",
+			clientSecret: "80fd99d15c54490d6558e3883c1bc40f",
+			finishUrl: "http://127.0.0.1:8080/api/user/facebookAccount/finish/",
+			grantType: "fb_exchange_token",
+			requestTokenUrl: "https://graph.facebook.com/oauth/access_token",
+			requestTokenUrlMethod: "POST"
+
+		},
 		mongoose: {
 			url: "mongodb://mongo/pinecone"
 		},

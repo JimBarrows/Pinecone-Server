@@ -7,15 +7,14 @@ import moment from "moment";
 import mongoose from "mongoose";
 import passport from "passport";
 import querystring from "querystring";
-import obtainRequestToken from "../twitterApi/TwitterApi";
+import obtainRequestTokenFromTwitter from "../twitterApi/TwitterApi";
 const isAuthenticated = require('../authentication');
 
-const env                  = process.env.NODE_ENV || "development";
-const router               = express.Router();
-const {ObjectId}           = mongoose.Types;
-const twitterConfiguration = Configuration[env].twitter;
-console.log("users twitterConfiguration: ", twitterConfiguration);
-
+const env                   = process.env.NODE_ENV || "development";
+const router                = express.Router();
+const {ObjectId}            = mongoose.Types;
+const twitterConfiguration  = Configuration[env].twitter;
+const facebookConfiguration = Configuration[env].facebook;
 
 /* GET users listing. */
 router.get('/', isAuthenticated, function (req, res) {
@@ -65,6 +64,102 @@ router.post("/destinations", isAuthenticated, function (req, res) {
 		$push: {destinations: req.body}
 	}).then(() => res.status(200).end());
 });
+
+router.delete("/facebookAccount/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id}, {
+		"$pull": {
+			"facebookAccounts": {_id: new ObjectId(req.params.id)}
+		}
+	}).then(() => res.status(200).end())
+			.catch(function (error) {
+				console.log("Error: ", error);
+				res.send(error.data).status(400).end();
+			});
+});
+
+function getPages(accessToken) {
+	return axios.get("https://graph.facebook.com/me/accounts", {
+		params: {
+			client_id: facebookConfiguration.clientId,
+			client_secret: facebookConfiguration.clientSecret,
+			access_token: accessToken
+		}
+	});
+}
+
+function convertCodeToAccessToken(code) {
+	return axios.get(`https://graph.facebook.com/oauth/access_token?client_id=${facebookConfiguration.clientId}&client_secret=${facebookConfiguration.clientSecret}&code=${code}&redirect_uri=${encodeURIComponent(facebookConfiguration.finishUrl)}`);
+}
+
+function convertShortTermAccessTokenToLongTermAccesstoken(accessToken) {
+	return axios.get("https://graph.facebook.com/oauth/access_token", {
+		params: {
+			grant_type: "fb_exchange_token",
+			client_id: facebookConfiguration.clientId,
+			client_secret: facebookConfiguration.clientSecret,
+			fb_exchange_token: accessToken
+		}
+	})
+}
+
+function getLongTermAccessToken(code) {
+	return convertCodeToAccessToken(code)
+			.then((response) => convertShortTermAccessTokenToLongTermAccesstoken(response.data.split('=')[1]))
+}
+
+router.get("/facebookAccount/finish", isAuthenticated, function (req, res) {
+	getLongTermAccessToken(req.query.code)
+			.then((response) => {
+				let longTermAccessToken = response.data.split('=')[1];
+				let updatedAccount      = Account.findOneAndUpdate({
+					_id: req.user._id,
+					"facebookAccounts.accessToken": ""
+				}, {'facebookAccounts.$.accessToken': longTermAccessToken}, {fields: {'facebookAccounts.$': 1}});
+				return Promise.all([getPages(longTermAccessToken), updatedAccount]);
+			})
+			.then((values) => Account.findOneAndUpdate({
+						"_id": values[1]._id,
+						"facebookAccounts._id": values[1].facebookAccounts[0]._id
+					}, {
+						'$set': {
+							'facebookAccounts.$.pages': values[0].data.data.map((p) => ({
+								"accessToken": p.access_token,
+								"category": p.category,
+								"name": p.name,
+								"pageId": p.id
+							}))
+						}
+					})
+			)
+			.then(() => res.redirect("/#/settings").end())
+			.catch((error)=>res.json(error).status(400).end());
+});
+
+router.put("/facebookAccount/:id", isAuthenticated, function (req, res) {
+	Account.findOneAndUpdate({_id: req.user._id, "twitterAccounts._id": req.params.id}, {
+				"$set": {
+					"facebookAccounts.$": req.body
+				}
+			})
+			.then(() => res.status(200).end())
+			.catch(function (error) {
+				res.send(error.data).status(400).end();
+			});
+});
+
+router.post("/facebookAccounts", isAuthenticated, function (req, res) {
+	let facebookAccount = req.body;
+	let userId          = req.user._id;
+	Account.findByIdAndUpdate(userId, {$push: {facebookAccounts: facebookAccount}})
+			.then(() => {
+				res.status(201).end()
+			})
+			.catch((error) => {
+				console.log("error: ", error);
+				res.status(400).json(error).end();
+			});
+});
+
 
 router.put('/facebookId', isAuthenticated, function (req, res) {
 	const owner                                    = req.user.id;
@@ -230,11 +325,10 @@ router.put("/twitterAccount/:id", isAuthenticated, function (req, res) {
 router.post("/twitterAccounts", isAuthenticated, function (req, res) {
 	let twitterAccount = req.body;
 
-	Account.findByIdAndUpdate(req.user._id, {$push: {twitterAccounts: twitterAccount}})
-			.then(() => obtainRequestToken(req.user._id))
+	Account.findByIdAndUpdate(userId, {$push: {twitterAccounts: twitterAccount}})
+			.then(() => obtainRequestTokenFromTwitter(userId))
 			.then((response) => res.json(querystring.parse(response.data)).status(200).end())
 			.catch(function (error) {
-				console.log("Error: ", error);
 				res.send(error).status(400).end();
 			});
 });

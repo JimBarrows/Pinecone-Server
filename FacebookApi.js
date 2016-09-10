@@ -1,12 +1,13 @@
 /**
- * Created by JimBarrows on 8/31/16.
+ * Created by JimBarrows on 9/8/16.
  */
 'use strict';
+
 import axios from "axios";
 import Configuration from "../configurations";
 import OAuth from "oauth-1.0a";
 const env    = process.env.NODE_ENV || "development";
-const config = Configuration[env];
+const config = Configuration[env].facebook;
 
 module.exports = function (userId) {
 	const oauth     = OAuth({
