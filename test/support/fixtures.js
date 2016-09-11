@@ -2,8 +2,9 @@
  * Created by JimBarrows on 8/17/16.
  */
 'use strict';
-import mongoose from "mongoose";
+import axios from "axios";
 import {Account, Campaign, Content} from "@reallybigtree/pinecone-models";
+import mongoose from "mongoose";
 
 mongoose.Promise = require('bluebird');
 
@@ -36,4 +37,14 @@ export function login(axios) {
 				axios.defaults.headers.cookie = response.headers['set-cookie'];
 				return response.data;
 			})
+}
+
+export function createApiClient() {
+	return axios.create({
+		baseURL: 'http://localhost:3000/api',
+		timeout: 10000,
+		validateStatus: function (status) {
+			return status < 500; // default
+		}
+	});
 }

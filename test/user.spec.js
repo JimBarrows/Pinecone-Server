@@ -1,9 +1,8 @@
 'use strict';
 
-import axios from "axios";
 import chai from "chai";
 import {Account} from "@reallybigtree/pinecone-models";
-import {cleanDatabase, createAccount, login, user} from "./support/fixtures";
+import {cleanDatabase, createAccount, createApiClient, login, user} from "./support/fixtures";
 
 const expect = chai.expect;
 
@@ -12,10 +11,7 @@ describe('/api/user', function () {
 	var client = {};
 
 	beforeEach(function (done) {
-		client = axios.create({
-			baseURL: 'http://localhost:3000/api',
-			timeout: 10000
-		});
+		client = createApiClient();
 		cleanDatabase()
 				.then(()=>createAccount())
 				.then(()=>login(client))
@@ -47,10 +43,7 @@ describe('/api/user/asset/:assetId', function () {
 	var id     = null;
 
 	beforeEach(function (done) {
-		client = axios.create({
-			baseURL: 'http://localhost:3000/api',
-			timeout: 10000
-		});
+		client = createApiClient();
 		cleanDatabase()
 				.then(()=>createAccount())
 				.then((account)=> id = account._id)
@@ -124,10 +117,7 @@ describe('/api/user/assets', function () {
 	var id     = null;
 
 	beforeEach(function (done) {
-		client = axios.create({
-			baseURL: 'http://localhost:3000/api',
-			timeout: 10000
-		});
+		client = createApiClient();
 		cleanDatabase()
 				.then(()=>createAccount())
 				.then((account)=> id = account._id)
@@ -168,10 +158,7 @@ describe("/api/user/register", function () {
 	var client = {};
 
 	beforeEach(function (done) {
-		client = axios.create({
-			baseURL: 'http://localhost:3000/api',
-			timeout: 10000
-		});
+		client = createApiClient();
 		cleanDatabase()
 				.then(()=> done())
 				.catch((error) => done(error));
@@ -205,10 +192,7 @@ describe("/api/user/login", function () {
 	var id     = null;
 
 	beforeEach(function (done) {
-		client = axios.create({
-			baseURL: 'http://localhost:3000/api',
-			timeout: 10000
-		});
+		client = createApiClient();
 		cleanDatabase()
 				.then(()=>createAccount())
 				.then((account) => id = account._id)

@@ -3,10 +3,9 @@
  */
 'use strict';
 
-import axios from "axios";
 import chai from "chai";
 import {Campaign, Content} from "@reallybigtree/pinecone-models";
-import {cleanDatabase, createAccount, login} from "./support/fixtures";
+import {cleanDatabase, createAccount, createApiClient, login} from "./support/fixtures";
 
 const expect = chai.expect;
 
@@ -18,10 +17,7 @@ describe("/api/content", function () {
 	var loggedInUser = {};
 
 	beforeEach(function (done) {
-		client = axios.create({
-			baseURL: 'http://localhost:3000/api',
-			timeout: 10000
-		});
+		client = createApiClient();
 		cleanDatabase()
 				.then(()=>createAccount())
 				.then(()=>login(client))
