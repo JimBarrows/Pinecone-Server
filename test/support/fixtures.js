@@ -20,8 +20,7 @@ export const salt = "585f093614aabe59a9e418fa39d29f87069e6e1522ac0170762e4884717
 
 export function cleanDatabase() {
 	return Account.remove({})
-			.then(() => Campaign.remove({}))
-			.then(() => Content.remove({}))
+			.then(() => Campaign.remove({}));
 }
 
 export function createAccount() {

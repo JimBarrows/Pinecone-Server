@@ -20,15 +20,16 @@ export  default {
 		rabbitMq: {
 			url: "amqp://localhost"
 		},
+
+		settings: {
+			url: "/#/settings"
+		},
 		twitter: {
 			publicKey: "CEmmg8lwj4OQsTEw9orBF7VAc",
 			secretKey: "YrKdLxTB74VPrg1o4wsaK8moPEKG4bNmK6vawvlAgmSUoVuGBY",
 			requestTokenUrl: "https://api.twitter.com/oauth/request_token",
 			requestTokenUrlMethod: "POST",
 			finishUrl: "http://127.0.0.1:8080/api/user/twitterAccount/finish/"
-		},
-		settings: {
-			url: "/#/settings"
 		}
 	},
 	production: {
@@ -46,6 +47,16 @@ export  default {
 		},
 		rabbitMq: {
 			url: "amqp://rabbitmq"
+		},
+		redis: {
+			host: "redis",
+			port: 6379,
+			ttl: 260,
+			resave: false,
+			saveUninitialized: false
+		},
+		settings: {
+			url: "/#/settings"
 		},
 		twitter: {
 			publicKey: "CEmmg8lwj4OQsTEw9orBF7VAc",

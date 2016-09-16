@@ -50,4 +50,14 @@ router.put('/:campaignId', isAuthenticated, function (req, res) {
 	}
 
 });
+
+router.post('/:campaignId/blogPosts', isAuthenticated, function (req, res) {
+	let {campaignId} = req.params;
+	Campaign.findByIdAndUpdate(campaignId, {$push: {"blogPosts": req.body}}, {new: true})
+			.exec()
+			.then((savedCampaign)=> {
+				savedCampaign ? res.json(savedCampaign).status(200).end() : res.status(404).end()
+			})
+			.catch((error)=>res.status(400).end());
+});
 module.exports = router;

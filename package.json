@@ -10,7 +10,7 @@
   "scripts" : {
     "pinecone:server:docker:build" : "docker build --build-arg NPM_TOKEN=6f3bcf35-125d-40da-bfab-dcfb6efece79 -t registry.gitlab.com/reallybigtree/pinecone-server .",
     "pinecone:server:docker:push" : "docker push registry.gitlab.com/reallybigtree/pinecone-server",
-    "pinecone:server:docker:run:dev" : "docker run --detach --name pinecone-server -p 3000:3000 --label=traefik.backend=api --label=traefik.frontend.rule=Host:localhost/api --label=traefik.port=3000 -v $(pwd):/usr/src/app --link pinecone-mongo:mongo --link pinecone-rabbitmq:rabbitmq registry.gitlab.com/reallybigtree/pinecone-server",
+    "pinecone:server:docker:run:dev" : "docker run --detach --name pinecone-server -p 3000:3000 --label=traefik.backend=api --label=traefik.frontend.rule=Host:localhost/api --label=traefik.port=3000 -v $(pwd):/usr/src/app --link pinecone-mongo:mongo --link pinecone-rabbitmq:rabbitmq --link pinecone-redis:redis registry.gitlab.com/reallybigtree/pinecone-server",
     "pinecone:server:docker:run:staging" : "docker run --detach --name pinecone-server registry.gitlab.com/reallybigtree/pinecone-server",
     "pinecone:server:start" : "nodemon --exec ./node_modules/.bin/babel-node --presets es2015,stage-2 ./bin/www",
     "pinecone:server:test:e2e" : "mocha -t 100000 --compilers js:babel-core/register",
@@ -31,7 +31,7 @@
     "url" : "https://gitlab.com/ReallyBigTree/Pinecone-Server/tree/master"
   },
   "dependencies" : {
-	"@reallybigtree/pinecone-models" : "^1.3.0",
+    "@reallybigtree/pinecone-models" : "^1.3.0",
     "amqplib" : "^0.4.2",
     "babel-cli" : "^6.10.1",
     "babel-core" : "^6.10.4",
@@ -39,10 +39,11 @@
     "babel-preset-stage-2" : "^6.11.0",
     "bluebird" : "^3.4.1",
     "body-parser" : "~1.15.1",
+    "connect-redis" : "^3.1.0",
     "cookie-parser" : "~1.4.3",
     "debug" : "~2.2.0",
     "express" : "~4.13.4",
-    "express-session" : "^1.13.0",
+    "express-session" : "^1.14.1",
     "less-middleware" : "1.0.x",
     "moment" : "^2.14.1",
     "mongoose" : "^4.5.3",
@@ -55,6 +56,7 @@
     "passport-local-mongoose" : "^4.0.0",
     "pug" : "^2.0.0-beta5",
     "rabbit.js" : "^0.4.4",
+    "redis" : "^2.6.2",
     "serve-favicon" : "~2.3.0",
     "twitter" : "^1.4.0"
   },
