@@ -5,7 +5,7 @@ stages:
 build_staging:
   image: docker:git
   stage: build
-  environment: staging
+  environment: master
   services:
   - docker:dind
   script:
