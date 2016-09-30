@@ -58,6 +58,43 @@ router.post('/:campaignId/blogPosts', isAuthenticated, function (req, res) {
 			.then((savedCampaign)=> {
 				savedCampaign ? res.json(savedCampaign).status(200).end() : res.status(404).end()
 			})
-			.catch((error)=>res.status(400).end());
+			.catch((error)=>res.status(400).json(error).end());
 });
+
+router.put('/:campaignId/blogPosts/:blogPostId', isAuthenticated, function (req, res) {
+	let {campaignId, blogPostId} = req.params;
+	Campaign.findOneAndUpdate({
+				_id: campaignId,
+				owner: req.user._id,
+				"blogPosts._id": blogPostId
+			}, {"$set": {"blogPosts.$": req.body}}, {new: true})
+			.exec()
+			.then((savedCampaign)=>savedCampaign ? res.status(200).json(savedCampaign).end() : res.status(404).end())
+			.catch((error)=>res.status(400).json(error).end());
+});
+
+router.delete('/:campaignId/blogPosts/:blogPostId', isAuthenticated, function (req, res) {
+	let {campaignId, blogPostId} = req.params;
+	Campaign.findOne({
+				_id: campaignId,
+				owner: req.user._id
+			})
+			.then((campaign)=> {
+				if (campaign) {
+					campaign.blogPosts.id(blogPostId).remove();
+					return campaign.save();
+				} else {
+					return Promise.reject("couldn't find");
+				}
+			})
+			.then((updatedCampaign) => res.status(200).json(updatedCampaign).end())
+			.catch((error)=> {
+				if (error === "couldn't find") {
+					res.status(404).end()
+				} else {
+					res.status(400).json(error).end()
+				}
+			});
+})
+;
 module.exports = router;
