@@ -2,10 +2,9 @@ stages:
   - build
   - deploy
 
-build_staging:
+build:
   image: docker:git
   stage: build
-  environment: master
   services:
   - docker:dind
   script:
@@ -14,17 +13,3 @@ build_staging:
     - docker push registry.gitlab.com/reallybigtree/pinecone-server
   only:
     - staging
-
-build_production:
-  image: docker:git
-  stage: build
-  environment: production
-  services:
-  - docker:dind
-  script:
-    - export package_version=`sh bin/version.sh`
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build --build-arg NPM_TOKEN=6f3bcf35-125d-40da-bfab-dcfb6efece79 -t registry.gitlab.com/reallybigtree/pinecone-server .
-    - docker push registry.gitlab.com/reallybigtree/pinecone-server:package_version
-  only:
-    - production
