@@ -17,6 +17,7 @@ COPY views views
 
 COPY app.js .
 COPY authentication.js .
+COPY configurations.js .
 COPY external_logins.js .
 COPY package.json .
 COPY passport.config.js .
