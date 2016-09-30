@@ -14,12 +14,14 @@ COPY messaging messaging
 COPY public public
 COPY routes routes
 COPY views views
+
 COPY app.js .
 COPY authentication.js .
 COPY external_logins.js .
 COPY package.json .
 COPY passport.config.js .
 COPY .npmrc .npmrc
+
 RUN npm install --production --no-optional
 RUN rm -f .npmrc
 
