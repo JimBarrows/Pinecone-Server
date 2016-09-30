@@ -11,4 +11,4 @@ build:
     - docker build --build-arg NPM_TOKEN=6f3bcf35-125d-40da-bfab-dcfb6efece79 -t registry.gitlab.com/reallybigtree/pinecone-server .
     - docker push registry.gitlab.com/reallybigtree/pinecone-server
   only:
-    - staging
+    - master
