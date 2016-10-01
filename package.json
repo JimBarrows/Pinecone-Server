@@ -31,7 +31,7 @@
 	"url" : "https://gitlab.com/ReallyBigTree/Pinecone-Server/tree/master"
   },
   "dependencies" : {
-	"@reallybigtree/pinecone-models" : "^1.4.1",
+	"@reallybigtree/pinecone-models" : "^1.4.2",
 	"amqplib" : "^0.4.2",
 	"babel-cli" : "^6.10.1",
 	"babel-core" : "^6.10.4",
