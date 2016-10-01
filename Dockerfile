@@ -13,6 +13,7 @@ COPY bin bin
 COPY messaging messaging
 COPY public public
 COPY routes routes
+COPY twitterApi twitterApi
 COPY views views
 
 COPY app.js .
