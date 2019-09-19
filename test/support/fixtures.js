@@ -2,9 +2,9 @@
  * Created by JimBarrows on 8/17/16.
  */
 'use strict';
-import axios from "axios";
-import {Account, Campaign, Content} from "@reallybigtree/pinecone-models";
-import mongoose from "mongoose";
+import axios               from "axios"
+import mongoose            from "mongoose"
+import {Account, Campaign} from "pinecone-models"
 
 mongoose.Promise = require('bluebird');
 

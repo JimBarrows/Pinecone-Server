@@ -2,9 +2,9 @@
  * Created by JimBarrows on 8/17/16.
  */
 'use strict';
-import {Campaign} from "@reallybigtree/pinecone-models";
-import express from "express";
-import isAuthenticated from "../authentication";
+import express         from "express"
+import {Campaign}      from "pinecone-models"
+import isAuthenticated from "../authentication"
 
 const router = express.Router();
 

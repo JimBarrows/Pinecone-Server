@@ -1,8 +1,8 @@
 'use strict';
 
-import chai from "chai";
-import {Account} from "@reallybigtree/pinecone-models";
-import {cleanDatabase, createAccount, createApiClient, login, user} from "./support/fixtures";
+import chai                                                         from "chai"
+import {Account}                                                    from "pinecone-models"
+import {cleanDatabase, createAccount, createApiClient, login, user} from "./support/fixtures"
 
 const expect = chai.expect;
 

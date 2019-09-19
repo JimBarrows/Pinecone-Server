@@ -1,6 +1,4 @@
-FROM node
-
-EXPOSE 3000
+FROM node:8.16-alpine
 
 ARG NPM_TOKEN
 ENV NODE_ENV="production"
@@ -16,7 +14,7 @@ COPY routes routes
 COPY twitterApi twitterApi
 COPY views views
 
-COPY app.js .
+COPY server.js .
 COPY authentication.js .
 COPY configurations.js .
 COPY external_logins.js .

@@ -3,9 +3,10 @@ const express         = require('express'),
       passport        = require('passport'),
       isAuthenticated = require('../authentication'),
       router          = express.Router();
-import {Content} from "@reallybigtree/pinecone-models";
-import * as send from "../messaging/send";
-import mongoose from "mongoose";
+import mongoose  from "mongoose"
+import {Content} from "pinecone-models"
+import * as send from "../messaging/send"
+
 const {Types} = mongoose.Schema;
 
 

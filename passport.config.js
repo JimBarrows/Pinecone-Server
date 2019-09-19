@@ -1,7 +1,8 @@
 var passport         = require('passport');
 var LocalStrategy    = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
-import {Account} from "@reallybigtree/pinecone-models";
+import {Account} from "pinecone-models"
+
 var ids = require('./external_logins');
 
 passport.use(new LocalStrategy(Account.authenticate()));
