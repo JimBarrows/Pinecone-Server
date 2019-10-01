@@ -18,10 +18,10 @@ export default {
 			url: "mongodb://localhost/pinecone"
 		},
 		rabbitMq: {
-			url: "amqp://localhost"
+			url: "amqp://pinecone-server_message_1"
 		},
 		redis   : {
-			host             : "redis",
+			host             : "localhost",
 			port             : 6379,
 			ttl              : 260,
 			resave           : false,
