@@ -2,11 +2,9 @@
  * Created by JimBarrows on 7/7/16.
  */
 'use strict';
-import amqp from "amqplib";
-import promise from "bluebird";
-import Configuration from "../configurations";
-const env    = process.env.NODE_ENV || "development";
-const config = Configuration[env];
+import amqp    from "amqplib"
+import promise from "bluebird"
+import config  from "../config"
 
 /*
  TODO: `sentToQueue` and `publish` both return a boolean indicating whether it's OK to send again straight away, or (when `false`) that you should wait for the event `'drain'` to fire before writing again. We're just doing the one write, so we'll ignore it.
