@@ -29,6 +29,11 @@ class Config {
 				rabbitMq: {
 					url: process.env.RABBITMQ_URL || "amqp://localhost"
 				},
+				redis   : {
+					host: process.env.REDIS_HOST || "localhost",
+					port: process.env.REDIS_PORT || 6379,
+					ttl : process.env.REDIS_TTL || 86400
+				},
 				server  : {
 					cors             : process.env.SERVER_CORS || {},
 					endpoint         : process.env.SERVER_ENDPOINT || '/',

@@ -9,8 +9,9 @@ import logger        from 'morgan'
 import passport      from 'passport'
 import LocalStrategy from 'passport-local'
 import path          from 'path'
-import config        from './config'
+import redis         from 'redis'
 
+import config    from './config'
 import {Account} from './models'
 
 const auth      = require('./routes/auth')
@@ -22,10 +23,12 @@ const users     = require('./routes/users')
 
 const app = express()
 console.log('config: ', config)
-// const redis      = require('redis')
-// const RedisStore = require('connect-redis')(session)
-// const client     = redis.createClient()
-// const redisStore = new RedisStore(client)
+const redisClient = redis.createClient()
+const redisStore  = require('connect-redis')(session)
+
+redisClient.on('error', (err) => {
+	console.log('Redis error: ', err)
+})
 
 mongoose.Promise = Promise
 mongoose.connect(`${config.database.protocol}://${config.database.host}:${config.database.port}/${config.database.database}`)
@@ -41,8 +44,11 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({
 									secret           : config.server.secret,
-									resave           : false,
-									saveUninitialized: true
+									resave           : config.server.resave,
+									saveUninitialized: config.server.saveUninitialized,
+									store            : new redisStore(Object.assign({},
+																																	{client: redisClient},
+																																	config.redis))
 								}))
 passport.use(new LocalStrategy.Strategy({usernameField: 'username'}, Account.authenticate()))
 passport.serializeUser(Account.serializeUser())
