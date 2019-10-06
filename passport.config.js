@@ -1,11 +1,11 @@
-var passport         = require('passport');
-var LocalStrategy    = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
-import {Account} from "pinecone-models"
+var passport      = require('passport')
+var LocalStrategy = require('passport-local').Strategy
+// var FacebookStrategy = require('passport-facebook').Strategy;
+import {Account} from "./models"
 
-var ids = require('./external_logins');
+// var ids = require('./external_logins');
 
-passport.use(new LocalStrategy(Account.authenticate()));
+passport.use(new LocalStrategy({usernameField: 'username'}, Account.authenticate()))
 
 // passport.use(new FacebookStrategy({
 // 			clientID: ids.facebook.clientID,
@@ -38,7 +38,7 @@ passport.use(new LocalStrategy(Account.authenticate()));
 // 		}
 // ));
 
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
+passport.serializeUser(Account.serializeUser())
+passport.deserializeUser(Account.deserializeUser())
 
-module.exports = passport;
+module.exports = passport

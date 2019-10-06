@@ -2,11 +2,9 @@
  * Created by JimBarrows on 7/8/16.
  */
 'use strict';
-import promise from "bluebird"
-import moment  from "moment"
-import Account from "pinecone-models/src/src/Account"
-import Channel from "pinecone-models/src/src/Channel"
-import Content from "pinecone-models/src/src/Content"
+import promise                     from "bluebird"
+import moment                      from "moment"
+import {Account, Channel, Content} from "../models"
 
 Account.remove({})
 		.then(() => Content.remove({}))

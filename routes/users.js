@@ -4,9 +4,9 @@ import express                       from "express"
 import moment                        from "moment"
 import mongoose                      from "mongoose"
 import passport                      from "passport"
-import {Account}                     from "pinecone-models"
 import querystring                   from "querystring"
 import config                        from "../config"
+import {Account}                     from "../models"
 import obtainRequestTokenFromTwitter from "../twitterApi/TwitterApi"
 
 const isAuthenticated = require('../authentication')

@@ -4,7 +4,7 @@
 'use strict';
 
 import chai                                                   from "chai"
-import {Campaign}                                             from "pinecone-models"
+import {Campaign}                                             from "../models"
 import {cleanDatabase, createAccount, createApiClient, login} from "./support/fixtures"
 
 const expect = chai.expect;

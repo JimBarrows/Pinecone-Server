@@ -7,7 +7,6 @@ import session      from "express-session"
 import mongoose     from "mongoose"
 import logger       from "morgan"
 import path         from "path"
-import process      from "process"
 import config       from "./config"
 import passport     from "./passport.config"
 
@@ -19,12 +18,11 @@ const server    = require('./routes/index')
 const users     = require('./routes/users')
 
 const app = express()
-const env = process.env.NODE_ENV || "development"
 console.log("config: ", config)
-const redis      = require('redis')
-const RedisStore = require("connect-redis")(session)
-const client     = redis.createClient()
-const redisStore = new RedisStore(client)
+// const redis      = require('redis')
+// const RedisStore = require("connect-redis")(session)
+// const client     = redis.createClient()
+// const redisStore = new RedisStore(client)
 
 mongoose.Promise = Promise
 mongoose.connect(`${config.database.protocol}://${config.database.host}:${config.database.port}/${config.database.database}`)
@@ -38,11 +36,16 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+// app.use(session({
+// 									secret           : config.server.secret,
+// 									store            : redisStore,
+// 									resave           : config.redis.resave,
+// 									saveUninitialized: config.redis.saveUninitialized
+// 								}))
 app.use(session({
 									secret           : config.server.secret,
-									store            : redisStore,
-									resave           : config.redis.resave,
-									saveUninitialized: config.redis.saveUninitialized
+									resave           : false,
+									saveUninitialized: true
 								}))
 app.use(passport.initialize())
 app.use(passport.session())

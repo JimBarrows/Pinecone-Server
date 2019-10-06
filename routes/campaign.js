@@ -3,14 +3,14 @@
  */
 'use strict';
 import express         from "express"
-import {Campaign}      from "pinecone-models"
 import isAuthenticated from "../authentication"
+import {Campaign}      from "../models"
 
 const router = express.Router();
 
 router.delete("/:campaignId", isAuthenticated, function (req, res) {
 	let {campaignId} = req.params;
-	Campaign.remove({_id: campaignId})
+	Campaign.deleteOne({_id: campaignId})
 			.then(() => res.status(200).end())
 			.catch((error) => {
 				console.log("Couldn't delete campaign ", contentId, " becuase ", error);
