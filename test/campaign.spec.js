@@ -4,7 +4,7 @@
 'use strict'
 
 import chai                                                                     from "chai"
-import {Account, Campaign}                                                      from "../models"
+import {Account, Campaign}                                                      from "../src/models"
 import {cleanDatabase, createAccount, createApiClient, hash, login, salt, user} from "./support/fixtures"
 
 const expect = chai.expect

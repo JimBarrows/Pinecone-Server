@@ -8,16 +8,16 @@ WORKDIR /usr/src/app
 
 
 COPY bin bin
-COPY messaging messaging
+COPY src/messaging messaging
 COPY public public
-COPY routes routes
-COPY twitterApi twitterApi
-COPY views views
+COPY src/routes routes
+COPY src/twitterApi twitterApi
+COPY src/views views
 
-COPY server.js .
-COPY authentication.js .
-COPY config.js .
-COPY external_logins.js .
+COPY src/server.js .
+COPY src/authentication.js .
+COPY src/config.js .
+COPY src/external_logins.js .
 COPY package.json .
 COPY passport.config.js .
 COPY .npmrc .npmrc

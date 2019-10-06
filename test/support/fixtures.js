@@ -4,7 +4,7 @@
 'use strict'
 import axios               from "axios"
 import mongoose            from "mongoose"
-import {Account, Campaign} from '../../models'
+import {Account, Campaign} from '../../src/models'
 
 console.log('requiring bluebigrd')
 mongoose.Promise = require('bluebird')

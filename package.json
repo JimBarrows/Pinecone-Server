@@ -2,7 +2,7 @@
 	"name": "pinecone-server",
 	"version": "1.1.0",
 	"description": "The backend for pinecone",
-	"main": "index.js",
+	"main": "src/index.js",
 	"bugs": {
 		"url": "https://github.com/JimBarrows/Pinecone-Server/issues"
 	},
@@ -10,11 +10,8 @@
 		"docker:push": "docker push pinecone/server",
 		"docker:build": "docker build -t pinecone/server .",
 		"docker:run": "docker run --detach --name pinecone-server --label=traefik.backend=Server --label=traefik.port=8080 --link pinecone-server:server pinecone/server",
-		"package": "webpack",
-		"start": "node index.js",
+		"start": "nodemon src/index.js",
 		"test": "babel-node test/support/run.js",
-		"test:webdriver:start": "webdriver-manager start",
-		"test:update-webdriver": "webdriver-manager update",
 		"predocker:build": "npm run package"
 	},
 	"author": {

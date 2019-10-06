@@ -18,7 +18,7 @@ const auth      = require('./routes/auth')
 const campaign  = require('./routes/campaign')
 const campaigns = require('./routes/campaigns')
 const content   = require('./routes/content')
-const server    = require('./routes/index')
+const server    = require('./routes')
 const users     = require('./routes/users')
 
 const app = express()
