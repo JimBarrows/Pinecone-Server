@@ -50,7 +50,7 @@ describe("/campaign/:campaignId", function () {
 	describe("get method", function () {
 
 		beforeEach(async function () {
-			const campaign = await createCampaign()
+			campaign = await createCampaign()
 		})
 
 		it("must retrieve the campaign specified by the id", async function () {
@@ -75,7 +75,7 @@ describe("/campaign/:campaignId", function () {
 	describe('put method', function () {
 
 		beforeEach(async function () {
-			const campaign = await createCampaign()
+			campaign = await createCampaign()
 		})
 
 		it("must update the campaign", async function () {
@@ -130,15 +130,15 @@ describe("/campaign/:campaignId", function () {
 		}
 
 		beforeEach(async function () {
-			const campaign = await createCampaign()
+			campaign = await createCampaign()
 		})
 
 		describe('post method', function () {
 			it("must add a blog post", async function () {
-				const response = await client.post(`/campaign/${campaign._id}/blogPosts`, blogPost)
-				let campaign   = response.data
-				expect(campaign.blogPosts.length).to.be.equal(1)
-				let savedBlogPost = campaign.blogPosts[0]
+				const response         = await client.post(`/campaign/${campaign._id}/blogPosts`, blogPost)
+				const responseCampaign = response.data
+				expect(responseCampaign.blogPosts.length).to.be.equal(1)
+				let savedBlogPost = responseCampaign.blogPosts[0]
 				basicFieldAreEquals(savedBlogPost)
 				expect(savedBlogPost._id).to.exist
 			})

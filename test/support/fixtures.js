@@ -34,7 +34,6 @@ export async function login (axios) {
 		password: user.password
 	})
 	axios.defaults.headers.common['Cookie']       = response.headers['set-cookie'][0]
-	axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 	return response.data
 }
@@ -45,6 +44,7 @@ export function createApiClient () {
 												timeout       : 10000,
 												validateStatus: function (status) {
 													return status < 500 // default
-												}
+												},
+												headers       : {'Content-Type': 'application/json'}
 											})
 }

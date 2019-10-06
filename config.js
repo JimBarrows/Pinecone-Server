@@ -29,26 +29,21 @@ class Config {
 				rabbitMq: {
 					url: process.env.RABBITMQ_URL || "amqp://localhost"
 				},
-				redis   : {
-					host             : process.env.REDIS_HOST || "localhost",
-					port             : process.env.REDIS_PORT || 6379,
-					ttl              : process.env.REDIS_TTL || 260,
-					resave           : process.env.REDIS_RESAVE || false,
-					saveUninitialized: process.env.REDIS_SAVEUNINITIALIZED || false
-				},
 				server  : {
-					cors         : process.env.SERVER_CORS || {},
-					endpoint     : process.env.SERVER_ENDPOINT || '/',
-					logger_format: process.env.LOGGER_FORMAT || 'dev',
-					name         : process.env.SERVER_NAME || "people_and_organizations-endpoint-graphql",
-					playground   : process.env.SERVER_PLAYGROUND || '/',
-					port         : process.env.SERVER_PORT || 3000,
-					secret       : process.env.SERVER_SESSION_SECRET || 'whiskey tango foxtrot november sierra foxtrot whiskey',
-					subscriptions: process.env.SERVER_SUBSCRIPTIONS || '/',
-					tracing      : process.env.SERVER_TRACING || true,
-					uploads      : process.env.SERVER_UPLOADS || {maxFieldSize: 1024, maxFileSize: 1024, maxFiles: 1},
-					version      : process.env.SERVER_VERSION || "0.1.0",
-					url          : process.env.SERVER_URL || "http://localhost"
+					cors             : process.env.SERVER_CORS || {},
+					endpoint         : process.env.SERVER_ENDPOINT || '/',
+					logger_format    : process.env.LOGGER_FORMAT || 'dev',
+					name             : process.env.SERVER_NAME || "people_and_organizations-endpoint-graphql",
+					playground       : process.env.SERVER_PLAYGROUND || '/',
+					port             : process.env.SERVER_PORT || 3000,
+					resave           : process.env.SERVER_RESAVE || false,
+					saveUninitialized: process.env.SERVER_SAVEUNINITIALIZED || false,
+					secret           : process.env.SERVER_SESSION_SECRET || 'whiskey tango foxtrot november sierra foxtrot whiskey',
+					subscriptions    : process.env.SERVER_SUBSCRIPTIONS || '/',
+					tracing          : process.env.SERVER_TRACING || true,
+					uploads          : process.env.SERVER_UPLOADS || {maxFieldSize: 1024, maxFileSize: 1024, maxFiles: 1},
+					version          : process.env.SERVER_VERSION || "0.1.0",
+					url              : process.env.SERVER_URL || "http://localhost"
 				},
 				twitter : {
 					publicKey            : process.env.TWITTER_PUBLICKEY || "dont put this here",

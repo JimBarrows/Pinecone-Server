@@ -39,12 +39,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
-// app.use(session({
-// 									secret           : config.server.secret,
-// 									store            : redisStore,
-// 									resave           : config.redis.resave,
-// 									saveUninitialized: config.redis.saveUninitialized
-// 								}))
 app.use(session({
 									secret           : config.server.secret,
 									resave           : false,
