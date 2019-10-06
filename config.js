@@ -18,8 +18,8 @@ class Config {
 					password: process.env.DATABASE_PASSWORD || 'pinecone'
 				},
 				facebook: {
-					clientId             : process.env.FACEBOOK_CLIENTID || "1236802509686356",
-					clientSecret         : process.env.FACEBOOK_CLIENTSECRET || "80fd99d15c54490d6558e3883c1bc40f",
+					clientId             : process.env.FACEBOOK_CLIENTID || "dont put this here",
+					clientSecret         : process.env.FACEBOOK_CLIENTSECRET || "dont put this here",
 					finishUrl            : process.env.FACEBOOK_FINISHURL || "http://127.0.0.1:8080/api/user/facebookAccount/finish/",
 					grantType            : process.env.FACEBOOK_GRANTTYPE || "fb_exchange_token",
 					requestTokenUrl      : process.env.FACEBOOK_REQUESTTOKENURL || "https://graph.facebook.com/oauth/access_token",
@@ -51,8 +51,8 @@ class Config {
 					url          : process.env.SERVER_URL || "http://localhost"
 				},
 				twitter : {
-					publicKey            : process.env.TWITTER_PUBLICKEY || "CEmmg8lwj4OQsTEw9orBF7VAc",
-					secretKey            : process.env.TWITTER_SECRETKEY || "YrKdLxTB74VPrg1o4wsaK8moPEKG4bNmK6vawvlAgmSUoVuGBY",
+					publicKey            : process.env.TWITTER_PUBLICKEY || "dont put this here",
+					secretKey            : process.env.TWITTER_SECRETKEY || "dont put this here",
 					requestTokenUrl      : process.env.TWITTER_REQUESTTOKENURL || "https://api.twitter.com/oauth/request_token",
 					requestTokenUrlMethod: process.env.TWITTER_REQUESTTOKENURL || "POST",
 					finishUrl            : process.env.TWITTER_FINISHURL || "http://127.0.0.1:8080/api/user/twitterAccount/finish/"
