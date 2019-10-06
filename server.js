@@ -1,14 +1,17 @@
 'use strict'
-import Promise      from "bluebird"
-import bodyParser   from "body-parser"
-import cookieParser from "cookie-parser"
-import express      from "express"
-import session      from "express-session"
-import mongoose     from "mongoose"
-import logger       from "morgan"
-import path         from "path"
-import config       from "./config"
-import passport     from "./passport.config"
+import Promise       from 'bluebird'
+import bodyParser    from 'body-parser'
+import cookieParser  from 'cookie-parser'
+import express       from 'express'
+import session       from 'express-session'
+import mongoose      from 'mongoose'
+import logger        from 'morgan'
+import passport      from 'passport'
+import LocalStrategy from 'passport-local'
+import path          from 'path'
+import config        from './config'
+
+import {Account} from './models'
 
 const auth      = require('./routes/auth')
 const campaign  = require('./routes/campaign')
@@ -18,9 +21,9 @@ const server    = require('./routes/index')
 const users     = require('./routes/users')
 
 const app = express()
-console.log("config: ", config)
+console.log('config: ', config)
 // const redis      = require('redis')
-// const RedisStore = require("connect-redis")(session)
+// const RedisStore = require('connect-redis')(session)
 // const client     = redis.createClient()
 // const redisStore = new RedisStore(client)
 
@@ -47,8 +50,12 @@ app.use(session({
 									resave           : false,
 									saveUninitialized: true
 								}))
+passport.use(new LocalStrategy.Strategy({usernameField: 'username'}, Account.authenticate()))
+passport.serializeUser(Account.serializeUser())
+passport.deserializeUser(Account.deserializeUser())
 app.use(passport.initialize())
 app.use(passport.session())
+
 
 app.use('/', server)
 app.use('/api/campaigns', campaigns)

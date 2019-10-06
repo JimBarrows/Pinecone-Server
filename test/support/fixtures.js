@@ -29,11 +29,13 @@ export function createAccount () {
 }
 
 export async function login (axios) {
-	const response = await axios.post('/user/login', {username: user.username, password: user.password})
-	if (!axios.defaults.headers) {
-		axios.defaults.headers = {}
-	}
-	axios.defaults.headers.cookie = response.headers['set-cookie']
+	const response                                = await axios.post('/user/login', {
+		username: user.username,
+		password: user.password
+	})
+	axios.defaults.headers.common['Cookie']       = response.headers['set-cookie'][0]
+	axios.defaults.headers.common['Content-Type'] = 'application/json'
+
 	return response.data
 }
 

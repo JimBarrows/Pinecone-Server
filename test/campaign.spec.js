@@ -39,7 +39,7 @@ describe("/campaign/:campaignId", function () {
 		})
 
 		it("must delete the campaign from the database", async () => {
-			const response = await client.delete('/campaign/' + campaign._id)
+			const response = await client.delete('/campaign/' + campaign._id, {withCredentials: true})
 			expect(response.status).to.be.equal(200)
 			const campaignInDatastore = await Campaign.findById(campaign._id)
 			expect(campaignInDatastore).to.be.null
