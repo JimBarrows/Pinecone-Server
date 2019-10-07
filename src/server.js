@@ -1,15 +1,14 @@
 'use strict'
-import Promise       from 'bluebird'
-import bodyParser    from 'body-parser'
-import cookieParser  from 'cookie-parser'
-import express       from 'express'
-import session       from 'express-session'
-import mongoose      from 'mongoose'
-import logger        from 'morgan'
-import passport      from 'passport'
-import LocalStrategy from 'passport-local'
-import path          from 'path'
-import redis         from 'redis'
+import Promise         from 'bluebird'
+import bodyParser      from 'body-parser'
+import cookieParser    from 'cookie-parser'
+import express         from 'express'
+import express_session from 'express-session'
+import mongoose        from 'mongoose'
+import logger          from 'morgan'
+import passport        from 'passport'
+import LocalStrategy   from 'passport-local'
+import path            from 'path'
 
 import config    from './config'
 import {Account} from './models'
@@ -23,8 +22,13 @@ const users     = require('./routes/users')
 
 const app = express()
 console.log('config: ', config)
-const redisClient = redis.createClient()
-const redisStore  = require('connect-redis')(session)
+const redis       = require('redis')
+const RedisStore  = require('connect-redis')(express_session)
+const redisClient = redis.createClient({
+																				 host: config.redis.host,
+																				 port: config.redis.port,
+																			 })
+
 
 redisClient.on('error', (err) => {
 	console.log('Redis error: ', err)
@@ -42,14 +46,15 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(session({
-									secret           : config.server.secret,
-									resave           : config.server.resave,
-									saveUninitialized: config.server.saveUninitialized,
-									store            : new redisStore(Object.assign({},
-																																	{client: redisClient},
-																																	config.redis))
-								}))
+app.use(express_session({
+													secret           : config.server.secret,
+													resave           : config.server.resave,
+													saveUninitialized: config.server.saveUninitialized,
+													store            : new RedisStore({
+																															client: redisClient,
+																															ttl   : config.redis.ttl
+																														})
+												}))
 passport.use(new LocalStrategy.Strategy({usernameField: 'username'}, Account.authenticate()))
 passport.serializeUser(Account.serializeUser())
 passport.deserializeUser(Account.deserializeUser())

@@ -9,10 +9,9 @@
 	"scripts": {
 		"docker:push": "docker push pinecone/server",
 		"docker:build": "docker build -t pinecone/server .",
-		"docker:run": "docker run --detach --name pinecone-server --label=traefik.backend=Server --label=traefik.port=8080 --link pinecone-server:server pinecone/server",
+		"docker:run": "docker run --detach --publish 3000:3000 --name pinecone-server --network=pinecone-server_default --env  DATABASE_HOST=pinecone-server_mongo_1 --env RABBITMQ_URL=pinecone-server_message_queue_1 --env REDIS_HOST=pinecone-server_cache_1 pinecone/server",
 		"start": "nodemon src/index.js",
-		"test": "babel-node test/support/run.js",
-		"predocker:build": "npm run package"
+		"test": "babel-node test/support/run.js"
 	},
 	"author": {
 		"name": "Jim Barrows",
@@ -34,6 +33,7 @@
 		"@babel/preset-env": "^7.5.5",
 		"@babel/register": "^7.5.5",
 		"amqplib": "^0.5.5",
+		"axios": "^0.19.0",
 		"bluebird": "^3.4.1",
 		"body-parser": "~1.19.0",
 		"connect-redis": "^4.0.2",
@@ -59,7 +59,6 @@
 		"twitter": "^1.4.0"
 	},
 	"devDependencies": {
-		"axios": "^0.19.0",
 		"chai": "^4.2.0",
 		"jasmine": "^3.5.0",
 		"jasmine-core": "^3.5.0",

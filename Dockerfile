@@ -1,28 +1,19 @@
-FROM node:8.16-alpine
+FROM node:12-alpine
 
-ARG NPM_TOKEN
-ENV NODE_ENV="production"
+EXPOSE 3000
 
-RUN mkdir -p /usr/src/app
+ENV NODE_ENV="default"
+
 WORKDIR /usr/src/app
 
+COPY .babelrc .
+COPY bin .
+COPY public .
+COPY src .
 
-COPY bin bin
-COPY src/messaging messaging
-COPY public public
-COPY src/routes routes
-COPY src/twitterApi twitterApi
-COPY src/views views
-
-COPY src/server.js .
-COPY src/authentication.js .
-COPY src/config.js .
-COPY src/external_logins.js .
 COPY package.json .
-COPY passport.config.js .
-COPY .npmrc .npmrc
 
-RUN npm install --production --no-optional
-RUN rm -f .npmrc
+RUN yarn global add babel-node
+RUN yarn install --production=true
 
-CMD [ "npm", "start" ]
+CMD [ "./node_modules/.bin/babel-node", "index.js"]
