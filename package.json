@@ -46,7 +46,7 @@
 		"moment": "^2.29.4",
 		"mongoose": "^5.7.5",
 		"morgan": "~1.9.1",
-		"nodemon": "^1.9.2",
+		"nodemon": "^2.0.20",
 		"oauth-1.0a": "^2.2.6",
 		"passport": "^0.6.0",
 		"passport-facebook": "^3.0.0",
